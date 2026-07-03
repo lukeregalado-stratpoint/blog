@@ -32,7 +32,7 @@ export default function NavBar() {
           <a href="/" className="block py-2 px-3 
             rounded md:bg-transparent 
             md:p-0 md:px-5
-            font-lexend font-extrabold text-[#dad7cd]">Home</a>
+            font-lexend font-extrabold text-[#003049]">Home</a>
         </li>
         <li>
           <a href="/about" className="block py-2 px-3 text-heading 
@@ -42,13 +42,13 @@ export default function NavBar() {
             md:p-0 
             md:px-5 
             md:dark:hover:bg-transparent
-            font-lexend font-extrabold text-[#dad7cd]">About</a>
+            font-lexend font-extrabold text-[#003049]">About</a>
         </li>
         <li>
           <a href="/blog" className="block py-2 px-3 text-heading rounded 
             hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 
             md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent md:px-5
-            font-lexend font-extrabold text-[#dad7cd]">Blog</a>
+            font-lexend font-extrabold text-[#003049]">Blog</a>
         </li>
       </ul>
     </nav>

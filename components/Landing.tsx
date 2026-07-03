@@ -16,7 +16,7 @@ export default function Landing() {
 		oklch(0.89 0.5 ${hueB}) 100%)`;
 
 	return (
-		<main className="fixed inset-0 -z-10 w-full h-screen pt-14 px-14 overflow-hidden bg-black rounded-lg shadow-xl flex items-center justify-center">
+		<main className="fixed inset-0 -z-10 w-full h-screen pt-14 px-14 overflow-hidden bg-[#e9ecef] rounded-lg shadow-xl flex items-center justify-center">
 			<div className="relative w-[90%] -translate-y-40	">
 				<svg className="w-full text-[12vw] h-[20vw] leading-[0.73em] font-black tracking-[-0.02em] overflow-visible"
 								aria-label="Luke Regalado">
