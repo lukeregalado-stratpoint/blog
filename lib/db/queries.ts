@@ -15,3 +15,19 @@ export async function getLatestPosts(limit = 6) {
     .orderBy(desc(posts.createdAt))
     .limit(limit);
 }
+
+export async function getFeaturedPost() {
+  const [latest] = await db
+    .select({
+      id: posts.id,
+      title: posts.title,
+      slug: posts.slug,
+      body: posts.body,
+      createdAt: posts.createdAt,
+    })
+    .from(posts)
+    .orderBy(desc(posts.createdAt))
+    .limit(1);
+
+  return latest ?? null;
+}

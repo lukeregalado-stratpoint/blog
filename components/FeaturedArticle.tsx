@@ -1,0 +1,55 @@
+// components/FeaturedArticle.tsx
+import Image from "next/image";
+import Link from "next/link";
+
+interface FeaturedArticleProps {
+  slug: string;
+  title: string;
+  excerpt?: string;
+  imageSrc: string;
+}
+
+export default function FeaturedArticle({
+  slug,
+  title,
+  excerpt,
+  imageSrc,
+}: FeaturedArticleProps) {
+  return (
+    <Link
+      href={`/blog/${slug}`}
+      className="group relative block w-full h-full rounded-t-3xl overflow-hidden"
+    >
+      <Image
+        src={imageSrc}
+        alt={title}
+        fill
+        priority
+        className="object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+
+      {/* gradient overlay for text legibility */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+      <div className="relative z-10 h-full flex flex-col justify-end p-6 md:p-10">
+        <span className="text-xs uppercase tracking-wider text-white/70 mb-2">
+          Featured
+        </span>
+        <h3 className="text-white text-xl md:text-2xl font-bold leading-tight">
+          {title}
+        </h3>
+        {excerpt && (
+          <p className="text-white/80 text-sm mt-2 line-clamp-2 hidden md:block">
+            {excerpt}
+          </p>
+        )}
+        <span className="inline-flex items-center gap-1 text-white text-sm mt-4 font-medium">
+          Click to read
+          <span className="transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
+        </span>
+      </div>
+    </Link>
+  );
+}
