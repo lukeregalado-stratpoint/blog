@@ -8,6 +8,7 @@ export const posts = pgTable("posts", {
 	title: text("title").notNull(),
 	slug: text("slug").notNull().unique(),
 	body: text("body").notNull(),
+	imageSrc: text("image_src"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -18,6 +19,7 @@ export const comments = pgTable("comments", {
 		.notNull(),
 	authorName: text("author_name").notNull(),
 	body: text("body").notNull(),
+	style: text("style"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
