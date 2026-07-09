@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { addCommentAction, type CommentFormState } from "@/lib/actions/comments";
 
@@ -10,6 +10,10 @@ type Comment = {
   body: string;
   createdAt: Date;
 };
+
+const NAME_MAX = 25;
+const BODY_MAX = 100;
+const COMMENTS_PER_PAGE = 5;
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -35,6 +39,12 @@ export default function Comments({
   comments: Comment[];
 }) {
   const [state, formAction] = useActionState(addCommentAction, initialState);
+  const [bodyLength, setBodyLength] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const totalPages = Math.max(1, Math.ceil(comments.length / COMMENTS_PER_PAGE));
+  const startIndex = (page - 1) * COMMENTS_PER_PAGE;
+  const visibleComments = comments.slice(startIndex, startIndex + COMMENTS_PER_PAGE);
 
   return (
     <div className="mt-10 wrap-break-word">
@@ -46,7 +56,7 @@ export default function Comments({
         {comments.length === 0 && (
           <p className="text-sm text-[#f1faee]">No comments yet.</p>
         )}
-        {comments.map((comment) => (
+        {visibleComments.map((comment) => (
           <div key={comment.id} className="border-b border-[#283618]/80 pb-4">
             <div className="flex items-center gap-2 text-sm">
               <span className="font-semibold">{comment.authorName}</span>
@@ -60,6 +70,32 @@ export default function Comments({
             <p className="text-sm text-[#f1faee]/70 mt-1">{comment.body}</p>
           </div>
         ))}
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between pt-2 text-sm">
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="text-[#f1faee]/70 hover:text-[#f1faee] disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              ← Previous
+            </button>
+
+            <span className="text-[#f1faee]/50 text-xs">
+              Page {page} of {totalPages}
+            </span>
+
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="text-[#f1faee]/70 hover:text-[#f1faee] disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Next →
+            </button>
+          </div>
+        )}
       </div>
 
       {/* LEAVE A COMMENT */}
@@ -71,6 +107,7 @@ export default function Comments({
             type="text"
             name="authorName"
             placeholder="Name (optional)"
+            maxLength={NAME_MAX}
             className="border rounded px-3 py-2 text-sm w-full"
           />
           {state.errors.authorName && (
@@ -83,11 +120,24 @@ export default function Comments({
             name="body"
             placeholder="Leave a comment..."
             rows={3}
+            maxLength={BODY_MAX}
+            onChange={(e) => setBodyLength(e.target.value.length)}
             className="border rounded px-3 py-2 text-sm w-full"
           />
-          {state.errors.body && (
-            <p className="text-red-500 text-xs mt-1">{state.errors.body}</p>
-          )}
+          <div className="flex justify-between items-start mt-1">
+            {state.errors.body ? (
+              <p className="text-red-500 text-xs">{state.errors.body}</p>
+            ) : (
+              <span />
+            )}
+            <span
+              className={`text-xs ${
+                bodyLength >= BODY_MAX ? "text-red-500" : "text-gray-400"
+              }`}
+            >
+              {bodyLength}/{BODY_MAX}
+            </span>
+          </div>
         </div>
 
         {state.success && (
