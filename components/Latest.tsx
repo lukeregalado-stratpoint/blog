@@ -7,7 +7,7 @@ export default async function Latest() {
   const latestPosts = await getLatestPosts(6);
 
   if (latestPosts.length === 0) {
-    return <p className="text-gray-500 mt-4">No posts yet — check back soon.</p>;
+    return <p className="text-gray-500 mt-4">No posts yet - check back soon.</p>;
   }
 
   return (
@@ -26,7 +26,7 @@ export default async function Latest() {
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
 
-          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
 
           <div className="relative z-10 flex h-full flex-col justify-between p-6">
             <time className="text-xs uppercase tracking-wide text-white/70 
@@ -40,10 +40,10 @@ export default async function Latest() {
             </time>
 
             <div>
-              <h3 className="text-lg font-semibold text-white group-hover:underline">
+              <h3 className="text-lg font-libre font-semibold text-white group-hover:underline">
                 {post.title}
               </h3>
-              <p className="mt-2 text-sm text-white/80 line-clamp-2">
+              <p className="mt-2 text-sm text-white/80 line-clamp-2 font-libre">
                 {excerpt(post.body)}
               </p>
             </div>

@@ -18,7 +18,7 @@
     return (
       <header
         className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between min-w-full px-4 md:px-8
-                    backdrop-blur-lg rounded-lg shadow-xl"
+                    backdrop-blur-lg rounded-b-lg shadow-xl"
       >
         <div className="relative w-40 h-10 p-2">
           <Link href="/">

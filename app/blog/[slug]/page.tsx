@@ -17,9 +17,9 @@ export default async function PostPage({
   }
 
   return (
-    <article className="px-4 py-6 max-w-2xl mx-auto md:px-8">
+    <article className="px-4 py-6 max-w-2xl mx-auto pt-20 md:px-8">
       <h1 className="text-2xl md:text-3xl font-bold">{post.title}</h1>
-      <div className="prose prose-sm md:prose-base mt-4">
+      <div className="prose prose-sm md:prose-base font-libre mt-4">
         {post.body}
       </div>
     </article>

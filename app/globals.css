@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -17,6 +19,23 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+
+.font-serif {
+  font-family: "DM Serif Display", serif;
+  font-style: normal;
+}
+
+.font-serif-italic {
+  font-family: "DM Serif Display", serif;
+  font-style: italic;
+}
+
+.font-libre {
+  font-family: "Libre Baskerville", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
 
 .font-lexend {
 	font-family: "Lexend", sans-serif;

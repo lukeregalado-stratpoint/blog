@@ -37,15 +37,15 @@ export default function FeaturedArticle({
         <span className="text-xs uppercase tracking-wider text-white/70 mb-2">
           Featured
         </span>
-        <h3 className="text-white text-xl md:text-2xl font-bold leading-tight">
+        <h3 className="text-white text-xl md:text-3xl font-bold font-serif leading-tight">
           {title}
         </h3>
         {excerpt && (
-          <p className="text-white/80 text-sm mt-2 line-clamp-2 hidden md:block">
+          <p className="text-white/80 text-md mt-2 line-clamp-2 font-serif">
             {excerpt}
           </p>
         )}
-        <span className="inline-flex items-center gap-1 text-white text-sm mt-4 font-medium">
+        <span className="inline-flex items-center gap-1 text-white/60 text-sm mt-4 font-serif font-medium">
           Click to read
           <span className="transition-transform duration-300 group-hover:translate-x-1">
             →

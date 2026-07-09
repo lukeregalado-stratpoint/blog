@@ -1,13 +1,13 @@
 "use client";
-import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { useState } from "react";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
 
   return (
     <nav>
-      {/* Hamburger button: visible only below md */}
+      {/* burger button */}
       <button
         type="button"
         onClick={() => setOpen(!open)}
