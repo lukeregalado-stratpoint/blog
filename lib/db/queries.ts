@@ -10,6 +10,7 @@ export async function getLatestPosts(limit = 6) {
       slug: posts.slug,
       body: posts.body,
       createdAt: posts.createdAt,
+      imageSrc: posts.imageSrc,
     })
     .from(posts)
     .orderBy(desc(posts.createdAt))
@@ -24,10 +25,17 @@ export async function getFeaturedPost() {
       slug: posts.slug,
       body: posts.body,
       createdAt: posts.createdAt,
+      imageSrc: posts.imageSrc
     })
     .from(posts)
     .orderBy(desc(posts.createdAt))
     .limit(1);
 
   return latest ?? null;
+}
+
+export async function createPost({ title, slug, body, imageSrc }: {
+  title: string; slug: string; body: string; imageSrc?: string;
+}) {
+  return db.insert(posts).values({ title, slug, body, imageSrc }).returning();
 }

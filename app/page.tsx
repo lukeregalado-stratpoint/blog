@@ -1,10 +1,18 @@
+import FeaturedArticle from "@/components/FeaturedArticle";
 import Landing from "@/components/Landing";
 import Latest from "@/components/Latest";
-import FeaturedArticle from "@/components/FeaturedArticle";
 import { getFeaturedPost } from "@/lib/db/queries";
 
 export default async function Page() {
   const featured = await getFeaturedPost();
+
+  if (!featured) return null;
+
+  const title = featured.title ?? "Untitled";
+  const slug = featured.slug ?? "";
+  const body = featured.body ?? "";
+  const imageSrc = featured.imageSrc ?? "/placeholder.jpg";
+
 
   return (
     <>
@@ -13,8 +21,8 @@ export default async function Page() {
         <section
           className="
             relative z-10
-            w-[100%] h-[50vh]
-            sm:w-[100%] sm:mx-auto
+            w-full h-[50vh]
+            sm:w-full sm:mx-auto
             md:w-[40vw] md:h-[18vw] md:max-w-2xl md:min-h-75
             md:ml-12 lg:ml-24 xl:ml-32
             rounded-t-3xl mt-auto
@@ -23,10 +31,10 @@ export default async function Page() {
         >
           {featured && (
             <FeaturedArticle
-              slug={featured.slug}
-              title={featured.title}
-              excerpt={featured.body.slice(0, 120) + "..."}
-              imageSrc="/images/default-cover.jpg"
+              slug={slug}
+              title={title}
+              excerpt={`${body.slice(0, 120)}...`}
+              imageSrc={imageSrc}
             />
           )}
         </section>

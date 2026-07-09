@@ -1,11 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getLatestPosts } from "@/lib/db/queries";
-
-function excerpt(body: string, len = 120) {
-  const clean = body.replace(/\s+/g, " ").trim();
-  return clean.length > len ? clean.slice(0, len) + "…" : clean;
-}
+import { excerpt } from "@/lib/utils";
 
 export default async function Latest() {
   const latestPosts = await getLatestPosts(6);
@@ -20,30 +16,37 @@ export default async function Latest() {
         <Link
           key={post.id}
           href={`/blog/${post.slug}`}
-          className="group block overflow-hidden rounded-2xl border border-gray-200 shadow-sm transition hover:shadow-md hover:-translate-y-0.5"
+          className="group relative block h-72 overflow-hidden rounded-2xl transition hover:shadow-md hover:-translate-y-0.5"
         >
-          <div className="relative h-44 w-full overflow-hidden">
-            <Image
-              src={post.imageSrc}
-              alt={post.title}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          </div>
+          <Image
+            src={post.imageSrc ?? "/placeholder.jpg"}
+            alt={post.title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
 
-          <div className="p-6">
-            <time className="text-xs uppercase tracking-wide text-gray-400">
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+
+          <div className="relative z-10 flex h-full flex-col justify-between p-6">
+            <time className="text-xs uppercase tracking-wide text-white/70 
+                            rounded-xl bg-clip-padding backdrop-filter 
+                            backdrop-blur-sm bg-[#31572c]/10 bg-opacity-10 p-2 w-fit">
               {new Date(post.createdAt).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
               })}
             </time>
-            <h3 className="mt-2 text-lg font-semibold text-black group-hover:underline">
-              {post.title}
-            </h3>
-            <p className="mt-2 text-sm text-gray-600">{excerpt(post.body)}</p>
+
+            <div>
+              <h3 className="text-lg font-semibold text-white group-hover:underline">
+                {post.title}
+              </h3>
+              <p className="mt-2 text-sm text-white/80 line-clamp-2">
+                {excerpt(post.body)}
+              </p>
+            </div>
           </div>
         </Link>
       ))}

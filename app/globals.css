@@ -7,6 +7,10 @@
 	--foreground: #171717;
 }
 
+@theme {
+	--color-cream: #e5e5e5;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

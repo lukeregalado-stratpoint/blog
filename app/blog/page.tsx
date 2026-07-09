@@ -1,27 +1,52 @@
+import Image from "next/image";
+import Link from 'next/link';
 import { db } from '@/lib/db';
 import { posts } from '@/lib/db/schema';
-import Link from 'next/link';
+import { excerpt } from "@/lib/utils";
 
 export default async function BlogPage() {
   const allPosts = await db.select().from(posts);
 
   return (
-    <div className="px-4 py-6 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Blog</h1>
-      <div className="flex flex-col gap-4">
-        {allPosts.map((post) => (
-          <Link
-            key={post.id}
-            href={`/blog/${post.slug}`}
-            className="block p-4 rounded-lg border border-gray-200 active:bg-gray-50"
-          >
-            <h2 className="text-lg font-semibold">{post.title}</h2>
-            <p className="text-sm text-gray-500 mt-1">
-              {post.createdAt.toLocaleDateString()}
-            </p>
-          </Link>
-        ))}
-      </div>
+    <div className="pt-20 px-8 pb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 bg-cream">
+      {allPosts.map((post) => (
+        <Link
+          key={post.id}
+          href={`/blog/${post.slug}`}
+          className="group relative block h-72 overflow-hidden rounded-2xl transition hover:shadow-md hover:-translate-y-0.5"
+        >
+          <Image
+            src={post.imageSrc ?? "/placeholder.jpg"}
+            alt={post.title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+
+          <div className="relative z-10 flex h-full flex-col justify-between p-6">
+            <time className="text-xs uppercase tracking-wide text-white/80 
+                            rounded-xl bg-clip-padding backdrop-filter 
+                            backdrop-blur-sm bg-[#31572c]/10 bg-opacity-10 p-2 w-fit">
+              {new Date(post.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </time>
+
+            <div>
+              <h3 className="text-lg font-semibold text-white group-hover:underline">
+                {post.title}
+              </h3>
+              <p className="mt-2 text-sm text-white/80 line-clamp-2">
+                {excerpt(post.body)}
+              </p>
+            </div>
+          </div>
+        </Link>
+      ))}
     </div>
   );
 }
