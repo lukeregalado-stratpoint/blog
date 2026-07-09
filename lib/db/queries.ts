@@ -1,6 +1,7 @@
+import { desc } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { posts } from "@/lib/db/schema";
-import { desc } from "drizzle-orm";
+
 
 export async function getLatestPosts(limit = 6) {
   return db

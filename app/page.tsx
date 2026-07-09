@@ -24,7 +24,7 @@ export default async function Page() {
             w-full h-[50vh]
             sm:w-full sm:mx-auto
             md:w-[40vw] md:h-[18vw] md:max-w-2xl md:min-h-75
-            md:ml-12 lg:ml-24 xl:ml-32
+            md:mr-12 lg:mr-20 xl:mr-20
             rounded-t-3xl mt-auto
             shadow-2xl
           "

@@ -30,7 +30,7 @@ export default function FeaturedArticle({
                   mask-[linear-gradient(to_bottom,tgba(0,0,0,1)_0%, rgba(0,0,0,0)_100%)]"
       />
 
-      {/* gradient overlay for text legibility */}
+      {/* gradient */}
       <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
 
       <div className="relative z-10 h-full flex flex-col justify-end p-6 md:p-10">
