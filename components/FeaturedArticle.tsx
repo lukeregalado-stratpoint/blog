@@ -18,7 +18,8 @@ export default function FeaturedArticle({
   return (
     <Link
       href={`/blog/${slug}`}
-      className="group relative block w-full h-full rounded-t-3xl overflow-hidden"
+      className="group relative block w-full h-full rounded-t-3xl overflow-hidden
+                md:rounded-b-3xl"
     >
       <Image
         src={imageSrc}
@@ -41,11 +42,11 @@ export default function FeaturedArticle({
           {title}
         </h3>
         {excerpt && (
-          <p className="text-white/80 text-md mt-2 line-clamp-2 font-serif">
+          <p className="text-white/80 text-md mt-2 line-clamp-2 font-libre">
             {excerpt}
           </p>
         )}
-        <span className="inline-flex items-center gap-1 text-white/60 text-sm mt-4 font-serif font-medium">
+        <span className="inline-flex items-center gap-1 text-white/60 text-sm mt-4 font-libre font-medium">
           Click to read
           <span className="transition-transform duration-300 group-hover:translate-x-1">
             →

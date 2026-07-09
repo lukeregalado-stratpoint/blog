@@ -40,7 +40,7 @@ export default async function BlogPage() {
               <h3 className="text-lg font-semibold font-serif text-white group-hover:underline">
                 {post.title}
               </h3>
-              <p className="mt-2 text-sm font-serif font-regular text-white/80 line-clamp-2">
+              <p className="mt-2 text-sm font-libre font-regular text-white/80 line-clamp-2">
                 {excerpt(post.body)}
               </p>
             </div>
