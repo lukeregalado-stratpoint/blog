@@ -1,4 +1,4 @@
-import { and, count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/lib/db";
 import { comments, posts } from "@/lib/db/schema";
@@ -65,13 +65,15 @@ export async function createPost({
 	slug,
 	body,
 	imageSrc,
+	tags,
 }: {
 	title: string;
 	slug: string;
 	body: string;
 	imageSrc?: string;
+	tags?: string[];
 }) {
-	return db.insert(posts).values({ title, slug, body, imageSrc }).returning();
+	return db.insert(posts).values({ title, slug, body, imageSrc, tags }).returning();
 }
 
 export async function updatePost({
@@ -80,16 +82,18 @@ export async function updatePost({
 	slug,
 	body,
 	imageSrc,
+	tags,
 }: {
 	id: string;
 	title: string;
 	slug: string;
 	body: string;
 	imageSrc?: string;
+	tags?: string[];
 }) {
 	return db
 		.update(posts)
-		.set({ title, slug, body, ...(imageSrc ? { imageSrc } : {}) })
+		.set({ title, slug, body, ...(imageSrc ? { imageSrc } : {}), ...(tags ? { tags } : {}) })
 		.where(eq(posts.id, id))
 		.returning();
 }

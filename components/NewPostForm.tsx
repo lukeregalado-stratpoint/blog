@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
@@ -20,6 +19,7 @@ function PublishButton() {
 
 export default function NewPostForm() {
 	const [preview, setPreview] = useState<string | null>(null);
+	const [tagsInput, setTagsInput] = useState(""); // no existing post to prefill from
 
 	function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
@@ -58,7 +58,6 @@ export default function NewPostForm() {
 							className="hidden"
 						/>
 					</label>
-
 					<div className="mt-6">
 						<input
 							name="title"
@@ -78,13 +77,22 @@ export default function NewPostForm() {
 							<span>·</span>
 							<span>Luke Regalado</span>
 						</div>
-
+						{/* TAGS */}
+						<div className="mt-4">
+							<input
+								name="tags"
+								value={tagsInput}
+								onChange={(e) => setTagsInput(e.target.value)}
+								placeholder="Tags (comma-separated)"
+								className="text-sm w-full bg-transparent border-b border-[#283618]/20 
+                                focus:border-[#283618] outline-none pb-1 placeholder:text-[#283618]/30"
+							/>
+						</div>
 						<div className="hidden md:block mt-10 md:mt-6">
 							<PublishButton />
 						</div>
 					</div>
 				</div>
-
 				<div className="col-span-2 mt-4 md:mt-0 md:mr-5 md:col-start-2 md:row-start-1">
 					<textarea
 						name="body"
@@ -96,7 +104,6 @@ export default function NewPostForm() {
                     placeholder:text-[#283618]/30"
 					/>
 				</div>
-
 				<div className="mt-6 md:hidden">
 					<PublishButton />
 				</div>

@@ -1,6 +1,6 @@
 // lib/db/schema.ts
 
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const posts = pgTable("posts", {
@@ -10,6 +10,7 @@ export const posts = pgTable("posts", {
 	body: text("body").notNull(),
 	imageSrc: text("image_src"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
+	tags: text('tags').array().notNull().default(sql`'{}'::text[]`),
 });
 
 export const comments = pgTable("comments", {

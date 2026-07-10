@@ -11,6 +11,7 @@ type Post = {
 	slug: string;
 	body: string;
 	imageSrc: string | null;
+	tags: string[] | null;
 	createdAt: Date;
 };
 
@@ -29,6 +30,7 @@ function SaveButton() {
 
 export default function EditPostForm({ post }: { post: Post }) {
 	const [preview, setPreview] = useState<string | null>(null);
+    const [tagsInput, setTagsInput] = useState(post.tags?.join(", ") ?? "");
 
 	function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
@@ -90,6 +92,16 @@ export default function EditPostForm({ post }: { post: Post }) {
 							<span>·</span>
 							<span>Luke Regalado</span>
 						</div>
+                        <div className="mt-4">
+                            <input
+                                name="tags"
+                                value={tagsInput}
+                                onChange={(e) => setTagsInput(e.target.value)}
+                                placeholder="Tags (comma-separated)"
+                                className="text-sm w-full bg-transparent border-b border-[#283618]/20 
+                                    focus:border-[#283618] outline-none pb-1 placeholder:text-[#283618]/30"
+                            />
+                        </div>
 
 						<div className="hidden md:flex mt-10 md:mt-6 items-center gap-3">
 							<SaveButton />

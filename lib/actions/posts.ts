@@ -17,6 +17,10 @@ export async function createPostAction(formData: FormData) {
 	const title = formData.get("title") as string;
 	const body = formData.get("body") as string;
 	const file = formData.get("image") as File | null;
+	const tagsRaw = formData.get("tags") as string;
+	const tags = tagsRaw
+		? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
+		: [];
 
 	let imageSrc: string | undefined;
 	if (file && file.size > 0) {
@@ -33,7 +37,7 @@ export async function createPostAction(formData: FormData) {
 	}
 
 	const slug = slugify(title);
-	await createPost({ title, slug, body, imageSrc });
+	await createPost({ title, slug, body, imageSrc, tags });
 	revalidateTag("posts", "hours");
 	redirect(`/blog/${slug}`);
 }
@@ -47,6 +51,10 @@ export async function updatePostAction(formData: FormData) {
 	const title = formData.get("title") as string;
 	const body = formData.get("body") as string;
 	const file = formData.get("image") as File | null;
+	const tagsRaw = formData.get("tags") as string;
+	const tags = tagsRaw
+		? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
+		: [];
 
 	let imageSrc: string | undefined;
 	if (file && file.size > 0) {
@@ -63,7 +71,7 @@ export async function updatePostAction(formData: FormData) {
 	}
 
 	const slug = slugify(title);
-	await updatePost({ id, title, slug, body, imageSrc });
+	await updatePost({ id, title, slug, body, imageSrc, tags });
 	revalidateTag("posts", "hours");
 	redirect(`/blog/${slug}`);
 }
