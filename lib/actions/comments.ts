@@ -14,6 +14,7 @@ const commentSchema = z.object({
   body: z
     .string()
     .trim()
+    .min(10, "Comment is too short (minimum 10 characters).")
     .max(2000, "Comment is too long (max 2000 characters)."),
   bold: z.boolean(),
   italic: z.boolean(),

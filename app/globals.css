@@ -59,3 +59,14 @@ body {
 	color: var(--foreground);
 	font-family: Arial, Helvetica, sans-serif;
 }
+
+.featured-section {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .featured-section {
+    width: clamp(320px, 35vw, 672px);
+    height: clamp(300px, 40vw, 500px);
+  }
+}

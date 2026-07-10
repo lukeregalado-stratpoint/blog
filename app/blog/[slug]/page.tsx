@@ -62,7 +62,8 @@ export default async function PostPage({
         </div>
       </div>
 
-      <div className="whitespace-pre-line prose prose-lg text-xl col-span-2 min-w-auto md:prose-base font-libre mt-4 md:mt-0 md:mr-5 md:col-start-2 md:row-start-1">
+      <div className="whitespace-pre-line prose prose-lg text-xl col-span-2 min-w-auto md:prose-base font-libre 
+                      mt-4 md:mt-0 md:mr-5 md:col-start-2 md:row-start-1">
         {post.body}
       </div>
 

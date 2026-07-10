@@ -20,9 +20,10 @@ type Comment = {
 };
 
 const PRESET_COLORS = ["#f1faee", "#ca7b80", "#c1121f", "#ffb703", "#a3c4f3", "#90a955"];
-const NAME_MAX = 25;
-const BODY_MAX = 100;
+const NAME_MAX = 80;
+const BODY_MAX = 2000;
 const COMMENTS_PER_PAGE = 5;
+const COMMENT_TRUNCATE_LENGTH = 100;
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -50,6 +51,27 @@ function parseStyle(raw: string | null): React.CSSProperties {
   } catch {
     return {};
   }
+}
+
+function CommentBody({ body, style }: { body: string; style: React.CSSProperties }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = body.length > COMMENT_TRUNCATE_LENGTH;
+  const displayText = expanded || !isLong ? body : `${body.slice(0, COMMENT_TRUNCATE_LENGTH)}...`;
+
+  return (
+    <p className="text-sm text-[#f1faee]/70 mt-1" style={style}>
+      {displayText}
+      {isLong && (
+        <button
+          type="button"
+          onClick={() => setExpanded((e) => !e)}
+          className="ml-1 text-[#f1faee]/50 hover:text-[#f1faee] underline text-xs cursor-pointer"
+        >
+          {expanded ? "Show less" : "Read more"}
+        </button>
+      )}
+    </p>
+  );
 }
 
 function ModerationControls({ commentId, postId }: { commentId: string; postId: string }) {
