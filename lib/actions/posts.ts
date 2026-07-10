@@ -1,9 +1,9 @@
 "use server";
 
+import { revalidateTag } from "next/cache";
 import { cloudinary } from "@/lib/cloudinary";
 import { redirect } from "next/navigation";
 import { createPost } from "@/lib/db/queries";
-
 
 function slugify(title: string) {
   return title
@@ -22,7 +22,6 @@ export async function createPostAction(formData: FormData) {
 
   if (file && file.size > 0) {
     const buffer = Buffer.from(await file.arrayBuffer());
-
     const result = await new Promise<any>((resolve, reject) => {
       cloudinary.uploader
         .upload_stream({ folder: "posts" }, (err, res) => {
@@ -31,13 +30,13 @@ export async function createPostAction(formData: FormData) {
         })
         .end(buffer);
     });
-
     imageSrc = result.secure_url;
   }
 
   const slug = slugify(title);
-
   await createPost({ title, slug, body, imageSrc });
+
+  revalidateTag('posts', 'max');
 
   redirect(`/blog/${slug}`);
 }

@@ -24,11 +24,11 @@ export async function addCommentAction(
   if (!body) {
     errors.body = "Comment can't be empty.";
   } else if (body.length > 1000) {
-    errors.body = "Comment is too long (max 1000 characters).";
+    errors.body = "Comment is too long (max 100 characters).";
   }
 
   if (authorName && authorName.length > 60) {
-    errors.authorName = "Name is too long (max 60 characters).";
+    errors.authorName = "Name is too long (max 25 characters).";
   }
 
   if (Object.keys(errors).length > 0) {

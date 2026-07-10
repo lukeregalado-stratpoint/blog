@@ -1,10 +1,22 @@
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, count } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/lib/db";
 import { comments } from "@/lib/db/schema";
 import { posts } from "@/lib/db/schema";
 
+export async function getAllPosts() {
+  'use cache';
+  cacheTag('posts');
+  cacheLife('hours'); // tune to how often you publish
+
+  return db.select().from(posts);
+}
 
 export async function getLatestPosts(limit = 6) {
+  'use cache';
+  cacheTag('posts');
+  cacheLife('hours');
+
   return db
     .select({
       id: posts.id,
@@ -20,6 +32,10 @@ export async function getLatestPosts(limit = 6) {
 }
 
 export async function getFeaturedPost() {
+  'use cache';
+  cacheTag('posts');
+  cacheLife('hours');
+
   const [latest] = await db
     .select({
       id: posts.id,
@@ -69,4 +85,13 @@ export async function createComment({
       body,
     })
     .returning();
+}
+
+export async function getCommentCount(postId: string) {
+  const [result] = await db
+    .select({ count: count() })
+    .from(comments)
+    .where(eq(comments.postId, postId));
+
+  return result?.count ?? 0;
 }

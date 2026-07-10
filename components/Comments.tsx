@@ -108,6 +108,7 @@ export default function Comments({
             name="authorName"
             placeholder="Name (optional)"
             maxLength={NAME_MAX}
+            suppressHydrationWarning // an error is thrown sometimes due to extensions like grammarly
             className="border rounded px-3 py-2 text-sm w-full"
           />
           {state.errors.authorName && (
@@ -120,7 +121,7 @@ export default function Comments({
             name="body"
             placeholder="Leave a comment..."
             rows={3}
-            maxLength={BODY_MAX}
+            maxLength={BODY_MAX} // an error is thrown sometimes due to extensions like grammarly
             onChange={(e) => setBodyLength(e.target.value.length)}
             className="border rounded px-3 py-2 text-sm w-full"
           />
