@@ -15,6 +15,13 @@
       "when": 1783511056191,
       "tag": "0001_dizzy_karma",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1783660425775,
+      "tag": "0002_lovely_sunfire",
+      "breakpoints": true
     }
   ]
 }

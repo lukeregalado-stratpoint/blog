@@ -1,7 +1,8 @@
 "use server";
 import { z } from "zod";
 import { revalidateTag } from "next/cache";
-import { createComment } from "@/lib/db/queries";
+import { createComment, updateCommentStatus } from "@/lib/db/queries";
+import { isAuthenticated } from "@/lib/auth";
 
 const commentSchema = z.object({
   authorName: z
@@ -63,4 +64,16 @@ export async function addCommentAction(
   revalidateTag(`comments-${postId}`, "seconds");
 
   return { errors: {}, success: true };
+}
+
+export async function approveCommentAction(commentId: string, postId: string) {
+  if (!(await isAuthenticated())) return;
+  await updateCommentStatus(commentId, "approved");
+  revalidateTag(`comments-${postId}`, "seconds");
+}
+
+export async function rejectCommentAction(commentId: string, postId: string) {
+  if (!(await isAuthenticated())) return;
+  await updateCommentStatus(commentId, "rejected");
+  revalidateTag(`comments-${postId}`, "seconds");
 }

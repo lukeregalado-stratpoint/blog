@@ -1,18 +1,22 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { isAuthenticated } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/blog/new")) {
-    const authed = await isAuthenticated();
+  const { pathname } = request.nextUrl;
+  const isProtected =
+    pathname === "/blog/new" || /^\/blog\/[^/]+\/edit$/.test(pathname);
+
+  if (isProtected) {
+    const authed = await isAuthenticated(request);
     if (!authed) {
-      // 404 instead of redirect, so the route's existence isn't revealed
       return NextResponse.rewrite(new URL("/404", request.url));
+      // if not admin, return 404
     }
   }
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/blog/new"],
+  matcher: ["/blog/new", "/blog/:slug/edit"],
 };

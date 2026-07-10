@@ -20,6 +20,9 @@ export const comments = pgTable("comments", {
 	authorName: text("author_name").notNull(),
 	body: text("body").notNull(),
 	style: text("style"),
+	status: text("status", { enum: ["pending", "approved", "rejected"] })
+		.default("pending")
+		.notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

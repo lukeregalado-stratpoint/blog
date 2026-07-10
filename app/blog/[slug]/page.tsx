@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from 'next/navigation';
 import { getAllPosts, getPostBySlug, getCommentsForPost } from '@/lib/db/queries';
+import { isAuthenticated } from '@/lib/auth';
 import Comments from '@/components/Comments';
 
 export async function generateStaticParams() {
@@ -35,7 +37,12 @@ export default async function PostPage({
           />
         </div>
         <div className="mt-6">
-          <h1 className="text-2xl md:text-3xl font-serif font-bold">{post.title}</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl md:text-3xl font-serif font-bold">{post.title}</h1>
+            <Suspense fallback={null}>
+              <EditLink slug={post.slug} />
+            </Suspense>
+          </div>
           <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
             <time>
               {new Date(post.createdAt).toLocaleDateString("en-US", {
@@ -68,9 +75,24 @@ export default async function PostPage({
   );
 }
 
+async function EditLink({ slug }: { slug: string }) {
+  const admin = await isAuthenticated();
+  if (!admin) return null;
+  return (
+    <Link
+      href={`/blog/${slug}/edit`}
+      className="text-sm underline text-blue-400 hover:text-blue-300"
+    >
+      Edit
+    </Link>
+  );
+}
+
 async function CommentsSection({ postId }: { postId: string }) {
-  const postComments = await getCommentsForPost(postId);
-  return <Comments postId={postId} comments={postComments} />;
+  const admin = await isAuthenticated();
+  const postComments = await getCommentsForPost(postId, admin);
+  console.log("[CommentsSection]", { admin, count: postComments.length });
+  return <Comments postId={postId} comments={postComments} admin={admin} />;
 }
 
 function CommentsSkeleton() {

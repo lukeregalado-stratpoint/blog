@@ -1,8 +1,14 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import { useFormStatus } from "react-dom";
-import { addCommentAction, type CommentFormState } from "@/lib/actions/comments";
+import {
+  addCommentAction,
+  approveCommentAction,
+  rejectCommentAction,
+  type CommentFormState,
+} from "@/lib/actions/comments";
+import { useRouter } from "next/navigation";
 
 type Comment = {
   id: string;
@@ -10,6 +16,7 @@ type Comment = {
   body: string;
   createdAt: Date;
   style: string | null;
+  status: "pending" | "approved" | "rejected";
 };
 
 const PRESET_COLORS = ["#f1faee", "#ca7b80", "#c1121f", "#ffb703", "#a3c4f3", "#90a955"];
@@ -45,14 +52,49 @@ function parseStyle(raw: string | null): React.CSSProperties {
   }
 }
 
+function ModerationControls({ commentId, postId }: { commentId: string; postId: string }) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  function handle(action: typeof approveCommentAction) {
+    startTransition(async () => {
+      await action(commentId, postId);
+      router.refresh();
+    });
+  }
+
+  return (
+    <div className="flex gap-3 mt-1 text-xs">
+      <button
+        type="button"
+        disabled={isPending}
+        onClick={() => handle(approveCommentAction)}
+        className="text-green-500 hover:underline disabled:opacity-50 cursor-pointer"
+      >
+        Approve
+      </button>
+      <button
+        type="button"
+        disabled={isPending}
+        onClick={() => handle(rejectCommentAction)}
+        className="text-red-500 hover:underline disabled:opacity-50 cursor-pointer"
+      >
+        Reject
+      </button>
+    </div>
+  );
+}
+
 const initialState: CommentFormState = { errors: {}, success: false };
 
 export default function Comments({
   postId,
   comments,
+  admin = false,
 }: {
   postId: string;
   comments: Comment[];
+  admin?: boolean;
 }) {
   const [state, formAction] = useActionState(addCommentAction, initialState);
   const [bodyLength, setBodyLength] = useState(0);
@@ -65,6 +107,7 @@ export default function Comments({
   const startIndex = (page - 1) * COMMENTS_PER_PAGE;
   const visibleComments = comments.slice(startIndex, startIndex + COMMENTS_PER_PAGE);
 
+  
   return (
     <div className="mt-10 wrap-break-word">
       <h2 className="text-lg font-libre font-semibold">
@@ -85,6 +128,17 @@ export default function Comments({
                   day: "numeric",
                 })}
               </span>
+              {admin && comment.status !== "approved" && (
+                <span
+                  className={`text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded ${
+                    comment.status === "pending"
+                      ? "bg-yellow-500/20 text-yellow-500"
+                      : "bg-red-500/20 text-red-500"
+                  }`}
+                >
+                  {comment.status}
+                </span>
+              )}
             </div>
             <p
               className="text-sm text-[#f1faee]/70 mt-1"
@@ -92,6 +146,9 @@ export default function Comments({
             >
               {comment.body}
             </p>
+            {admin && comment.status === "pending" && (
+              <ModerationControls commentId={comment.id} postId={postId} />
+            )}
           </div>
         ))}
 
@@ -168,7 +225,6 @@ export default function Comments({
           </div>
         </div>
 
-        {/* STYLE CONTROLS */}
         <div className="flex items-center gap-4 text-sm">
           <label className="flex items-center gap-1 cursor-pointer">
             <input
@@ -189,33 +245,31 @@ export default function Comments({
             <span className="italic">I</span>
           </label>
           <div className="flex items-center gap-2">
-
-          <div className="flex items-center gap-1.5">
-            {PRESET_COLORS.map((preset) => (
-              <button
-                key={preset}
-                type="button"
-                onClick={() => setColor(preset)}
-                className={`w-5 h-5 rounded-full border-2 transition cursor-pointer ${
-                  color === preset ? "border-white scale-110" : "border-transparent"
-                }`}
-                style={{ backgroundColor: preset }}
-                aria-label={`Set color ${preset}`}
-              />
-            ))}
+            <div className="flex items-center gap-1.5">
+              {PRESET_COLORS.map((preset) => (
+                <button
+                  key={preset}
+                  type="button"
+                  onClick={() => setColor(preset)}
+                  className={`w-5 h-5 rounded-full border-2 transition cursor-pointer ${
+                    color === preset ? "border-white scale-110" : "border-transparent"
+                  }`}
+                  style={{ backgroundColor: preset }}
+                  aria-label={`Set color ${preset}`}
+                />
+              ))}
+            </div>
+            <input type="hidden" name="color" value={color} />
           </div>
-          <input type="hidden" name="color" value={color} />
-        </div>
 
           <SubmitButton />
-        
-      </div>
+        </div>
 
         {state.success && (
-          <p className="text-green-600 text-xs">Comment posted!</p>
+          <p className="text-green-600 text-xs">
+            {admin ? "Comment posted!" : "Comment submitted for review!"}
+          </p>
         )}
-
-        
       </form>
     </div>
   );
