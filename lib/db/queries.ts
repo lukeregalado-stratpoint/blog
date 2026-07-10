@@ -82,10 +82,12 @@ export async function createComment({
   postId,
   authorName,
   body,
+  style,
 }: {
   postId: string;
   authorName?: string;
   body: string;
+  style?: string | null;
 }) {
   return db
     .insert(comments)
@@ -93,6 +95,7 @@ export async function createComment({
       postId,
       authorName: authorName?.trim() || "Anonymous",
       body,
+      style: style ?? null,
     })
     .returning();
 }

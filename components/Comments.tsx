@@ -9,24 +9,40 @@ type Comment = {
   authorName: string;
   body: string;
   createdAt: Date;
+  style: string | null;
 };
 
+const PRESET_COLORS = ["#f1faee", "#ca7b80", "#c1121f", "#ffb703", "#a3c4f3", "#90a955"];
 const NAME_MAX = 25;
 const BODY_MAX = 100;
 const COMMENTS_PER_PAGE = 5;
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-
   return (
     <button
       type="submit"
       disabled={pending}
-      className="self-start bg-black text-white text-sm rounded px-4 py-2 disabled:opacity-50"
+      className="ml-auto bg-[#283618] text-[#f1faee] font-bold text-sm rounded px-4 py-2 disabled:opacity-50
+                cursor-pointer"
     >
-      {pending ? "Posting..." : "Post comment"}
+      {pending ? "Posting..." : "➤"}
     </button>
   );
+}
+
+function parseStyle(raw: string | null): React.CSSProperties {
+  if (!raw) return {};
+  try {
+    const { bold, italic, color } = JSON.parse(raw);
+    return {
+      fontWeight: bold ? "bold" : undefined,
+      fontStyle: italic ? "italic" : undefined,
+      color: color || undefined,
+    };
+  } catch {
+    return {};
+  }
 }
 
 const initialState: CommentFormState = { errors: {}, success: false };
@@ -41,6 +57,9 @@ export default function Comments({
   const [state, formAction] = useActionState(addCommentAction, initialState);
   const [bodyLength, setBodyLength] = useState(0);
   const [page, setPage] = useState(1);
+  const [bold, setBold] = useState(false);
+  const [italic, setItalic] = useState(false);
+  const [color, setColor] = useState("#f1faee");
 
   const totalPages = Math.max(1, Math.ceil(comments.length / COMMENTS_PER_PAGE));
   const startIndex = (page - 1) * COMMENTS_PER_PAGE;
@@ -67,7 +86,12 @@ export default function Comments({
                 })}
               </span>
             </div>
-            <p className="text-sm text-[#f1faee]/70 mt-1">{comment.body}</p>
+            <p
+              className="text-sm text-[#f1faee]/70 mt-1"
+              style={parseStyle(comment.style)}
+            >
+              {comment.body}
+            </p>
           </div>
         ))}
 
@@ -81,11 +105,9 @@ export default function Comments({
             >
               ← Previous
             </button>
-
             <span className="text-[#f1faee]/50 text-xs">
               Page {page} of {totalPages}
             </span>
-
             <button
               type="button"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
@@ -108,7 +130,7 @@ export default function Comments({
             name="authorName"
             placeholder="Name (optional)"
             maxLength={NAME_MAX}
-            suppressHydrationWarning // an error is thrown sometimes due to extensions like grammarly
+            suppressHydrationWarning
             className="border rounded border-[#283618]/70 px-3 py-2 text-sm w-full"
           />
           {state.errors.authorName && (
@@ -121,8 +143,13 @@ export default function Comments({
             name="body"
             placeholder="Leave a comment..."
             rows={3}
-            maxLength={BODY_MAX} // an error is thrown sometimes due to extensions like grammarly
+            maxLength={BODY_MAX}
             onChange={(e) => setBodyLength(e.target.value.length)}
+            style={{
+              fontWeight: bold ? "bold" : undefined,
+              fontStyle: italic ? "italic" : undefined,
+              color,
+            }}
             className="border rounded border-[#283618]/70 px-3 py-2 text-sm w-full"
           />
           <div className="flex justify-between items-start mt-1">
@@ -141,11 +168,54 @@ export default function Comments({
           </div>
         </div>
 
+        {/* STYLE CONTROLS */}
+        <div className="flex items-center gap-4 text-sm">
+          <label className="flex items-center gap-1 cursor-pointer">
+            <input
+              type="checkbox"
+              name="bold"
+              checked={bold}
+              onChange={(e) => setBold(e.target.checked)}
+            />
+            <span className="font-bold">B</span>
+          </label>
+          <label className="flex items-center gap-1 cursor-pointer">
+            <input
+              type="checkbox"
+              name="italic"
+              checked={italic}
+              onChange={(e) => setItalic(e.target.checked)}
+            />
+            <span className="italic">I</span>
+          </label>
+          <div className="flex items-center gap-2">
+
+          <div className="flex items-center gap-1.5">
+            {PRESET_COLORS.map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => setColor(preset)}
+                className={`w-5 h-5 rounded-full border-2 transition cursor-pointer ${
+                  color === preset ? "border-white scale-110" : "border-transparent"
+                }`}
+                style={{ backgroundColor: preset }}
+                aria-label={`Set color ${preset}`}
+              />
+            ))}
+          </div>
+          <input type="hidden" name="color" value={color} />
+        </div>
+
+          <SubmitButton />
+        
+      </div>
+
         {state.success && (
           <p className="text-green-600 text-xs">Comment posted!</p>
         )}
 
-        <SubmitButton />
+        
       </form>
     </div>
   );

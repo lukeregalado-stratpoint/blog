@@ -7,13 +7,19 @@ const commentSchema = z.object({
   authorName: z
     .string()
     .trim()
-    .max(25, "Name is too long (max 25 characters).")
+    .max(80, "Name is too long (max 80 characters).")
     .optional()
     .or(z.literal("")),
   body: z
     .string()
     .trim()
-    .max(100, "Comment is too long (max 100 characters)."),
+    .max(2000, "Comment is too long (max 2000 characters)."),
+  bold: z.boolean(),
+  italic: z.boolean(),
+  color: z
+    .string()
+    .regex(/^#[0-9a-fA-F]{6}$/, "Invalid color.")
+    .optional(),
 });
 
 export type CommentFormState = {
@@ -33,6 +39,9 @@ export async function addCommentAction(
   const result = commentSchema.safeParse({
     authorName: formData.get("authorName"),
     body: formData.get("body"),
+    bold: formData.get("bold") === "on",
+    italic: formData.get("italic") === "on",
+    color: formData.get("color") || undefined,
   });
 
   if (!result.success) {
@@ -46,9 +55,11 @@ export async function addCommentAction(
     };
   }
 
-  const { authorName, body } = result.data;
+  const { authorName, body, bold, italic, color } = result.data;
+  const style = bold || italic || color ? JSON.stringify({ bold, italic, color }) : null;
 
-  await createComment({ postId, authorName, body }); // createComment still applies the "Anonymous" fallback
+  await createComment({ postId, authorName, body, style });
+
   revalidatePath("/blog/[slug]", "page");
 
   return { errors: {}, success: true };
