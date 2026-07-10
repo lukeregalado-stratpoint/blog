@@ -1,9 +1,17 @@
 "use client";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  // true for any /blog/[slug] page, e.g. /blog/testing, /blog/testing/edit
+  // false for the /blog listing page itself
+  const isOnSlugPage = /^\/blog\/[^/]+/.test(pathname);
+
+  const linkColor = isOnSlugPage ? "text-cream" : "text-[#003049]";
 
   return (
     <nav>
@@ -17,7 +25,6 @@ export default function NavBar() {
       >
         {open ? <X size={24} /> : <Menu size={24} />}
       </button>
-
       <ul
         className={`
           ${open ? "flex" : "hidden"} 
@@ -29,16 +36,26 @@ export default function NavBar() {
         `}
       >
         <li>
-          <a href="/" className="block py-2 px-3 
+          <a
+            href="/"
+            className={`block py-2 px-3 
             rounded md:bg-transparent 
             md:p-0 md:px-5
-            font-lexend font-extrabold text-[#003049]">Home</a>
+            font-lexend font-extrabold ${linkColor}`}
+          >
+            Home
+          </a>
         </li>
         <li>
-          <a href="/blog" className="block py-2 px-3 text-heading rounded 
+          <a
+            href="/blog"
+            className={`block py-2 px-3 text-heading rounded 
             hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 
             md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent md:px-5
-            font-lexend font-extrabold text-[#003049]">Blog</a>
+            font-lexend font-extrabold ${linkColor}`}
+          >
+            Blog
+          </a>
         </li>
       </ul>
     </nav>
