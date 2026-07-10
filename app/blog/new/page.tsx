@@ -1,9 +1,17 @@
+import { logoutAction } from "@/lib/actions/auth";
 import { createPostAction } from "@/lib/actions/posts";
 
 export default function NewPostPage() {
   return (
     <div className="max-w-2xl mx-auto py-12">
-      <h1 className="text-2xl font-semibold mb-6">New post</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold">New post</h1>
+        <form action={logoutAction}>
+          <button type="submit" className="text-sm text-gray-500 underline">
+            Sign out
+          </button>
+        </form>
+      </div>
       <form action={createPostAction} className="flex flex-col gap-4">
         <input
           name="title"
