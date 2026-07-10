@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useTransition } from "react";
+import { useActionState, useState, useTransition, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import {
   addCommentAction,
@@ -64,7 +64,7 @@ function ModerationControls({ commentId, postId }: { commentId: string; postId: 
   }
 
   return (
-    <div className="flex gap-3 mt-1 text-xs">
+    <div className="flex gap-3 mt-1 text-xs font-black ml-auto">
       <button
         type="button"
         disabled={isPending}
@@ -96,6 +96,7 @@ export default function Comments({
   comments: Comment[];
   admin?: boolean;
 }) {
+  const router = useRouter();
   const [state, formAction] = useActionState(addCommentAction, initialState);
   const [bodyLength, setBodyLength] = useState(0);
   const [page, setPage] = useState(1);
@@ -103,11 +104,16 @@ export default function Comments({
   const [italic, setItalic] = useState(false);
   const [color, setColor] = useState("#f1faee");
 
+  useEffect(() => {
+    if (state.success) {
+      router.refresh();
+    }
+  }, [state.success, router]);
+
   const totalPages = Math.max(1, Math.ceil(comments.length / COMMENTS_PER_PAGE));
   const startIndex = (page - 1) * COMMENTS_PER_PAGE;
   const visibleComments = comments.slice(startIndex, startIndex + COMMENTS_PER_PAGE);
 
-  
   return (
     <div className="mt-10 wrap-break-word">
       <h2 className="text-lg font-libre font-semibold">
@@ -121,13 +127,16 @@ export default function Comments({
         {visibleComments.map((comment) => (
           <div key={comment.id} className="border-b border-[#283618]/80 pb-4">
             <div className="flex items-center gap-2 text-sm">
+
               <span className="font-semibold">{comment.authorName}</span>
+
               <span className="text-gray-500">
                 {new Date(comment.createdAt).toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
                 })}
               </span>
+
               {admin && comment.status !== "approved" && (
                 <span
                   className={`text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded ${
@@ -139,16 +148,19 @@ export default function Comments({
                   {comment.status}
                 </span>
               )}
+
+              {admin && comment.status === "pending" && (
+                <ModerationControls commentId={comment.id} postId={postId} />
+              )}
+
             </div>
+
             <p
               className="text-sm text-[#f1faee]/70 mt-1"
               style={parseStyle(comment.style)}
             >
               {comment.body}
             </p>
-            {admin && comment.status === "pending" && (
-              <ModerationControls commentId={comment.id} postId={postId} />
-            )}
           </div>
         ))}
 

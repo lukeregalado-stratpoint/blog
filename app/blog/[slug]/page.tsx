@@ -91,7 +91,7 @@ async function EditLink({ slug }: { slug: string }) {
 async function CommentsSection({ postId }: { postId: string }) {
   const admin = await isAuthenticated();
   const postComments = await getCommentsForPost(postId, admin);
-  console.log("[CommentsSection]", { admin, count: postComments.length });
+
   return <Comments postId={postId} comments={postComments} admin={admin} />;
 }
 

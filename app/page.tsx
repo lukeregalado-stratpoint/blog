@@ -41,7 +41,7 @@ export default async function Page() {
         </section>
       </div>
 
-      <section className="relative z-10 min-h-screen bg-[#f1faee] md:rounded-t-3xl shadow-2xl px-8 py-25">
+      <section className="relative z-10 min-h-screen bg-[#f1faee] md:rounded-t-3xl shadow-2xl px-8 pt-25">
         <h2 className="text-3xl font-bold font-serif text-black">Latest posts</h2>
         <Latest />
       </section>
