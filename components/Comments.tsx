@@ -109,7 +109,7 @@ export default function Comments({
             placeholder="Name (optional)"
             maxLength={NAME_MAX}
             suppressHydrationWarning // an error is thrown sometimes due to extensions like grammarly
-            className="border rounded px-3 py-2 text-sm w-full"
+            className="border rounded border-[#283618]/70 px-3 py-2 text-sm w-full"
           />
           {state.errors.authorName && (
             <p className="text-red-500 text-xs mt-1">{state.errors.authorName}</p>
@@ -123,7 +123,7 @@ export default function Comments({
             rows={3}
             maxLength={BODY_MAX} // an error is thrown sometimes due to extensions like grammarly
             onChange={(e) => setBodyLength(e.target.value.length)}
-            className="border rounded px-3 py-2 text-sm w-full"
+            className="border rounded border-[#283618]/70 px-3 py-2 text-sm w-full"
           />
           <div className="flex justify-between items-start mt-1">
             {state.errors.body ? (
