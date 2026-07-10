@@ -29,6 +29,7 @@ export default function FeaturedArticle({
         priority
         className="object-cover transition-transform duration-500 group-hover:scale-105
                   mask-[linear-gradient(to_bottom,tgba(0,0,0,1)_0%, rgba(0,0,0,0)_100%)]"
+        loading="eager"
       />
 
       {/* gradient */}

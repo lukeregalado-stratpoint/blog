@@ -21,6 +21,7 @@ export default async function BlogPage() {
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="eager"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
           <div className="relative z-10 flex h-full flex-col justify-between p-6">

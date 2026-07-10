@@ -70,13 +70,17 @@ export async function createPost({ title, slug, body, imageSrc }: {
 
 // COMMENTS
 
-export const getCommentsForPost = cache(async (postId: string) => {
+export async function getCommentsForPost(postId: string) {
+  'use cache';
+  cacheTag(`comments-${postId}`);
+  cacheLife('seconds');
+
   return db
     .select()
     .from(comments)
     .where(eq(comments.postId, postId))
     .orderBy(desc(comments.createdAt));
-});
+}
 
 export async function createComment({
   postId,

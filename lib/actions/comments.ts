@@ -1,6 +1,6 @@
 "use server";
 import { z } from "zod";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { createComment } from "@/lib/db/queries";
 
 const commentSchema = z.object({
@@ -60,7 +60,7 @@ export async function addCommentAction(
 
   await createComment({ postId, authorName, body, style });
 
-  revalidatePath("/blog/[slug]", "page");
+  revalidateTag(`comments-${postId}`, "seconds");
 
   return { errors: {}, success: true };
 }
