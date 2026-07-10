@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -14,28 +14,27 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
 }
 
 .font-serif {
-  font-family: "DM Serif Display", serif;
-  font-style: normal;
+	font-family: "DM Serif Display", serif;
+	font-style: normal;
 }
 
 .font-serif-italic {
-  font-family: "DM Serif Display", serif;
-  font-style: italic;
+	font-family: "DM Serif Display", serif;
+	font-style: italic;
 }
 
 .font-libre {
-  font-family: "Libre Baskerville", serif;
-  font-optical-sizing: auto;
-  font-style: normal;
+	font-family: "Libre Baskerville", serif;
+	font-optical-sizing: auto;
+	font-style: normal;
 }
-
 
 .font-lexend {
 	font-family: "Lexend", sans-serif;
@@ -61,12 +60,12 @@ body {
 }
 
 .featured-section {
-  width: 100%;
+	width: 100%;
 }
 
 @media (min-width: 768px) {
-  .featured-section {
-    width: clamp(320px, 35vw, 672px);
-    height: clamp(300px, 40vw, 500px);
-  }
+	.featured-section {
+		width: clamp(320px, 35vw, 672px);
+		height: clamp(300px, 40vw, 500px);
+	}
 }
