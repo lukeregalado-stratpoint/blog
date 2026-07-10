@@ -1,7 +1,20 @@
 "use server";
-
+import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createComment } from "@/lib/db/queries";
+
+const commentSchema = z.object({
+  authorName: z
+    .string()
+    .trim()
+    .max(25, "Name is too long (max 25 characters).")
+    .optional()
+    .or(z.literal("")),
+  body: z
+    .string()
+    .trim()
+    .max(100, "Comment is too long (max 100 characters)."),
+});
 
 export type CommentFormState = {
   errors: {
@@ -16,27 +29,27 @@ export async function addCommentAction(
   formData: FormData
 ): Promise<CommentFormState> {
   const postId = formData.get("postId") as string;
-  const authorName = (formData.get("authorName") as string)?.trim();
-  const body = (formData.get("body") as string)?.trim();
 
-  const errors: CommentFormState["errors"] = {};
+  const result = commentSchema.safeParse({
+    authorName: formData.get("authorName"),
+    body: formData.get("body"),
+  });
 
-  if (!body) {
-    errors.body = "Comment can't be empty.";
-  } else if (body.length > 1000) {
-    errors.body = "Comment is too long (max 100 characters).";
+  if (!result.success) {
+    const fieldErrors = result.error.flatten().fieldErrors;
+    return {
+      errors: {
+        authorName: fieldErrors.authorName?.[0],
+        body: fieldErrors.body?.[0],
+      },
+      success: false,
+    };
   }
 
-  if (authorName && authorName.length > 60) {
-    errors.authorName = "Name is too long (max 25 characters).";
-  }
+  const { authorName, body } = result.data;
 
-  if (Object.keys(errors).length > 0) {
-    return { errors, success: false };
-  }
-
-  await createComment({ postId, authorName, body });
-  revalidatePath(`/blog`, "layout");
+  await createComment({ postId, authorName, body }); // createComment still applies the "Anonymous" fallback
+  revalidatePath("/blog/[slug]", "page");
 
   return { errors: {}, success: true };
 }

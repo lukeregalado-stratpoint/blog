@@ -3,6 +3,7 @@ import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/lib/db";
 import { comments } from "@/lib/db/schema";
 import { posts } from "@/lib/db/schema";
+import { cache } from "react";
 
 export async function getAllPosts() {
   'use cache';
@@ -52,6 +53,15 @@ export async function getFeaturedPost() {
   return latest ?? null;
 }
 
+export async function getPostBySlug(slug: string) {
+  'use cache';
+  cacheTag('posts');
+  cacheLife('hours');
+
+  const [post] = await db.select().from(posts).where(eq(posts.slug, slug));
+  return post ?? null;
+}
+
 export async function createPost({ title, slug, body, imageSrc }: {
   title: string; slug: string; body: string; imageSrc?: string;
 }) {
@@ -60,13 +70,13 @@ export async function createPost({ title, slug, body, imageSrc }: {
 
 // COMMENTS
 
-export async function getCommentsForPost(postId: string) {
+export const getCommentsForPost = cache(async (postId: string) => {
   return db
     .select()
     .from(comments)
     .where(eq(comments.postId, postId))
     .orderBy(desc(comments.createdAt));
-}
+});
 
 export async function createComment({
   postId,
@@ -95,3 +105,4 @@ export async function getCommentCount(postId: string) {
 
   return result?.count ?? 0;
 }
+
