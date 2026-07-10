@@ -34,13 +34,13 @@ export async function createPostAction(formData: FormData) {
 
   const slug = slugify(title);
   await createPost({ title, slug, body, imageSrc });
-  revalidateTag('posts', 'max');
+  revalidateTag('posts', 'hours');
   redirect(`/blog/${slug}`);
 }
 
 export async function updatePostAction(formData: FormData) {
   if (!(await isAuthenticated())) {
-    redirect("/portal-7x2f");
+    redirect("/");
   }
 
   const id = formData.get("id") as string;
@@ -64,6 +64,6 @@ export async function updatePostAction(formData: FormData) {
 
   const slug = slugify(title);
   await updatePost({ id, title, slug, body, imageSrc });
-  revalidateTag('posts', 'max');
+  revalidateTag('posts', 'hours');
   redirect(`/blog/${slug}`);
 }
