@@ -1,10 +1,13 @@
 import FeaturedArticle from "@/components/FeaturedArticle";
 import Landing from "@/components/Landing";
 import Latest from "@/components/Latest";
-import { getFeaturedPost } from "@/lib/db/queries";
+import { getFeaturedPost, getPostThumbnails } from "@/lib/db/queries";
 
 export default async function Page() {
-	const featured = await getFeaturedPost();
+	const [featured, thumbnails] = await Promise.all([
+		getFeaturedPost(),
+		getPostThumbnails(24),
+	]);
 
 	if (!featured) return null;
 
@@ -15,7 +18,7 @@ export default async function Page() {
 
 	return (
 		<>
-			<Landing />
+			<Landing thumbnails={thumbnails} />
 			<div className="h-screen flex flex-col justify-end md:justify-center">
 				<section
 					className="
@@ -40,7 +43,7 @@ export default async function Page() {
 				</section>
 			</div>
 
-			<section className="relative z-10 min-h-screen bg-[#f1faee] md:rounded-t-3xl shadow-2xl px-8 pt-25 pb-8">
+			<section className="relative z-10 min-h-screen bg-[#f1faee]/95 md:rounded-t-3xl shadow-2xl px-8 pt-25 pb-8">
 				<h2 className="text-3xl font-bold font-serif text-black">
 					Latest posts
 				</h2>

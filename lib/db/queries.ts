@@ -1,4 +1,4 @@
-import { and, count, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { and, count, desc, eq, ilike, isNotNull, or, sql } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/lib/db";
 import { comments, posts } from "@/lib/db/schema";
@@ -9,6 +9,23 @@ export async function getAllPosts() {
 	cacheLife("hours");
 
 	return db.select().from(posts);
+}
+
+export async function getPostThumbnails(limit = 24) {
+	"use cache";
+	cacheTag("posts");
+	cacheLife("hours");
+
+	return db
+		.select({
+			id: posts.id,
+			slug: posts.slug,
+			imageSrc: posts.imageSrc,
+		})
+		.from(posts)
+		.where(isNotNull(posts.imageSrc))
+		.orderBy(desc(posts.createdAt))
+		.limit(limit);
 }
 
 export async function getLatestPosts(limit = 6) {
