@@ -1,7 +1,7 @@
 import { and, count, desc, eq, ilike, isNotNull, or, sql } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/lib/db";
-import { comments, posts } from "@/lib/db/schema";
+import { comments, posts, stickers } from "@/lib/db/schema";
 
 export async function getAllPosts() {
 	"use cache";
@@ -134,6 +134,43 @@ export async function updatePost({
 		})
 		.where(eq(posts.id, id))
 		.returning();
+}
+
+// STICKERS
+
+export async function getStickersForPost(postId: string) {
+	"use cache";
+	cacheTag(`stickers-${postId}`);
+	cacheLife("seconds");
+
+	return db
+		.select()
+		.from(stickers)
+		.where(eq(stickers.postId, postId))
+		.orderBy(stickers.createdAt);
+}
+
+export async function createSticker({
+	postId,
+	emoji,
+	x,
+	y,
+	rotation,
+}: {
+	postId: string;
+	emoji: string;
+	x: number;
+	y: number;
+	rotation: number;
+}) {
+	return db
+		.insert(stickers)
+		.values({ postId, emoji, x, y, rotation })
+		.returning();
+}
+
+export async function deleteSticker(stickerId: string) {
+	return db.delete(stickers).where(eq(stickers.id, stickerId));
 }
 
 // COMMENTS

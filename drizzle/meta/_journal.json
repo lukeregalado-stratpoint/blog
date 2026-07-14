@@ -36,6 +36,13 @@
       "when": 1783992531136,
       "tag": "0004_sour_banshee",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1783993898153,
+      "tag": "0005_hesitant_penance",
+      "breakpoints": true
     }
   ]
 }

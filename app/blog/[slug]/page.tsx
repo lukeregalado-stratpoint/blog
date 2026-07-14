@@ -3,16 +3,29 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Comments from "@/components/Comments";
+import StickerLayer from "@/components/StickerLayer";
 import { isAuthenticated } from "@/lib/auth";
 import {
 	getAllPosts,
 	getCommentsForPost,
 	getPostBySlug,
+	getStickersForPost,
 } from "@/lib/db/queries";
 
 export async function generateStaticParams() {
 	const allPosts = await getAllPosts();
 	return allPosts.map((post) => ({ slug: post.slug }));
+}
+
+async function StickerSection({ postId }: { postId: string }) {
+	const [admin, postStickers] = await Promise.all([
+		isAuthenticated(),
+		getStickersForPost(postId),
+	]);
+
+	return (
+		<StickerLayer postId={postId} initialStickers={postStickers} admin={admin} />
+	);
 }
 
 export default async function PostPage({
@@ -39,6 +52,9 @@ export default async function PostPage({
 						priority
 						className="object-cover mask-[linear-gradient(to_bottom,rgba(0,0,0,1)_0%,rgba(0,0,0,0)_100%)]"
 					/>
+					<Suspense fallback={null}>
+						<StickerSection postId={post.id} />
+					</Suspense>
 				</div>
 				<div className="mt-6">
 					<div className="flex items-center gap-3">
@@ -66,7 +82,8 @@ export default async function PostPage({
 							{post.tags.map((tag) => (
 								<span
 									key={tag}
-									className="text-xs px-2.5 py-1 rounded-full bg-[#283618]/10 text-[#283618]"
+									className="text-xs px-2.5 py-1 rounded-full bg-[#283618]/10 text-[#f1faee]/60
+												hover:bg-[#283618]/40 hover:text-[#f1faee]/80 cursor-context-menu select-none"
 								>
 									{tag}
 								</span>
@@ -84,7 +101,7 @@ export default async function PostPage({
 
 			<div
 				className="whitespace-pre-line prose prose-lg text-xl col-span-2 min-w-auto md:prose-base font-libre 
-                      mt-4 md:mt-0 md:mr-5 md:col-start-2 md:row-start-1"
+                      mt-4 md:mt-0 md:mr-5 md:col-start-2 md:row-start-1 wrap-break-word"
 			>
 				{post.body}
 			</div>
