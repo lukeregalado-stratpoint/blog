@@ -13,6 +13,7 @@ type Post = {
 	imageSrc: string | null;
 	tags: string[] | null;
 	createdAt: Date;
+	autoApproveComments?: boolean; 
 };
 
 function SaveButton() {
@@ -30,7 +31,10 @@ function SaveButton() {
 
 export default function EditPostForm({ post }: { post: Post }) {
 	const [preview, setPreview] = useState<string | null>(null);
-    const [tagsInput, setTagsInput] = useState(post.tags?.join(", ") ?? "");
+	const [tagsInput, setTagsInput] = useState(post.tags?.join(", ") ?? "");
+	const [autoApproveComments, setAutoApproveComments] = useState(
+		post.autoApproveComments ?? true,
+	);
 
 	function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
@@ -42,10 +46,15 @@ export default function EditPostForm({ post }: { post: Post }) {
 	return (
 		<form action={updatePostAction}>
 			<input type="hidden" name="id" value={post.id} />
+			<input
+				type="hidden"
+				name="autoApproveComments"
+				value={autoApproveComments ? "true" : "false"}
+			/>
 
 			<article className="px-4 py-6 min-w-full max-w-5xl pt-20 md:px-8 md:grid md:grid-cols-3 md:gap-10">
 				<div className="md:col-start-1 md:row-start-1">
-					{/* IMAGE — click to replace */}
+					{/* IMAGE */}
 					<label
 						className="relative z-10 block w-full h-[50vh] md:h-[28vw] md:min-h-75 md:rounded-b-3xl rounded-t-3xl 
                             shadow-2xl cursor-pointer group overflow-hidden"
@@ -92,16 +101,38 @@ export default function EditPostForm({ post }: { post: Post }) {
 							<span>·</span>
 							<span>Luke Regalado</span>
 						</div>
-                        <div className="mt-4">
-                            <input
-                                name="tags"
-                                value={tagsInput}
-                                onChange={(e) => setTagsInput(e.target.value)}
-                                placeholder="Tags (comma-separated)"
-                                className="text-sm w-full bg-transparent border-b border-[#283618]/20 
+						<div className="mt-4">
+							<input
+								name="tags"
+								value={tagsInput}
+								onChange={(e) => setTagsInput(e.target.value)}
+								placeholder="Tags (comma-separated)"
+								className="text-sm w-full bg-transparent border-b border-[#283618]/20 
                                     focus:border-[#283618] outline-none pb-1 placeholder:text-[#283618]/30"
-                            />
-                        </div>
+							/>
+						</div>
+
+						{/* AUTO-APPROVE COMMENTS TOGGLE */}
+						<div className="mt-4 flex items-center gap-2">
+							<button
+								type="button"
+								role="switch"
+								aria-checked={autoApproveComments}
+								onClick={() => setAutoApproveComments((v) => !v)}
+								className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+									autoApproveComments ? "bg-[#283618]" : "bg-[#283618]/20"
+								}`}
+							>
+								<span
+									className={`inline-block h-3.5 w-3.5 transform rounded-full bg-[#f1faee] transition-transform ${
+										autoApproveComments ? "translate-x-5" : "translate-x-1"
+									}`}
+								/>
+							</button>
+							<span className="text-sm text-[#f1faee]/70">
+								Auto-approve comments
+							</span>
+						</div>
 
 						<div className="hidden md:flex mt-10 md:mt-6 items-center gap-3">
 							<SaveButton />

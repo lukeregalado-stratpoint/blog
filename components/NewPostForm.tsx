@@ -20,6 +20,7 @@ function PublishButton() {
 export default function NewPostForm() {
 	const [preview, setPreview] = useState<string | null>(null);
 	const [tagsInput, setTagsInput] = useState(""); // no existing post to prefill from
+	const [autoApproveComments, setAutoApproveComments] = useState(true);
 
 	function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
@@ -30,6 +31,12 @@ export default function NewPostForm() {
 
 	return (
 		<form action={createPostAction}>
+			<input
+				type="hidden"
+				name="autoApproveComments"
+				value={autoApproveComments ? "true" : "false"}
+			/>
+
 			<article className="px-4 py-6 min-w-full max-w-5xl pt-6 md:px-8 md:grid md:grid-cols-3 md:gap-10">
 				<div className="md:col-start-1 md:row-start-1">
 					{/* IMAGE */}
@@ -88,6 +95,29 @@ export default function NewPostForm() {
                                 focus:border-[#283618] outline-none pb-1 placeholder:text-[#283618]/30"
 							/>
 						</div>
+
+						{/* AUTO-APPROVE COMMENTS TOGGLE */}
+						<div className="mt-4 flex items-center gap-2">
+							<button
+								type="button"
+								role="switch"
+								aria-checked={autoApproveComments}
+								onClick={() => setAutoApproveComments((v) => !v)}
+								className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+									autoApproveComments ? "bg-[#283618]" : "bg-[#283618]/20"
+								}`}
+							>
+								<span
+									className={`inline-block h-3.5 w-3.5 transform rounded-full bg-[#f1faee] transition-transform ${
+										autoApproveComments ? "translate-x-5" : "translate-x-1"
+									}`}
+								/>
+							</button>
+							<span className="text-sm text-[#283618]/70">
+								Auto-approve comments
+							</span>
+						</div>
+
 						<div className="hidden md:block mt-10 md:mt-6">
 							<PublishButton />
 						</div>

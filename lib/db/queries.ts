@@ -83,14 +83,26 @@ export async function createPost({
 	body,
 	imageSrc,
 	tags,
+	autoApproveComments,
 }: {
 	title: string;
 	slug: string;
 	body: string;
 	imageSrc?: string;
 	tags?: string[];
+	autoApproveComments?: boolean;
 }) {
-	return db.insert(posts).values({ title, slug, body, imageSrc, tags }).returning();
+	return db
+		.insert(posts)
+		.values({
+			title,
+			slug,
+			body,
+			imageSrc,
+			tags,
+			...(autoApproveComments !== undefined ? { autoApproveComments } : {}),
+		})
+		.returning();
 }
 
 export async function updatePost({
@@ -100,6 +112,7 @@ export async function updatePost({
 	body,
 	imageSrc,
 	tags,
+	autoApproveComments,
 }: {
 	id: string;
 	title: string;
@@ -107,10 +120,18 @@ export async function updatePost({
 	body: string;
 	imageSrc?: string;
 	tags?: string[];
+	autoApproveComments?: boolean;
 }) {
 	return db
 		.update(posts)
-		.set({ title, slug, body, ...(imageSrc ? { imageSrc } : {}), ...(tags ? { tags } : {}) })
+		.set({
+			title,
+			slug,
+			body,
+			...(imageSrc ? { imageSrc } : {}),
+			...(tags ? { tags } : {}),
+			...(autoApproveComments !== undefined ? { autoApproveComments } : {}),
+		})
 		.where(eq(posts.id, id))
 		.returning();
 }
@@ -133,16 +154,27 @@ export async function getCommentsForPost(postId: string, admin = false) {
 		.orderBy(desc(comments.createdAt));
 }
 
+export async function getPostAutoApproveComments(postId: string) {
+	const [post] = await db
+		.select({ autoApproveComments: posts.autoApproveComments })
+		.from(posts)
+		.where(eq(posts.id, postId));
+
+	return post?.autoApproveComments ?? false;
+}
+
 export async function createComment({
 	postId,
 	authorName,
 	body,
 	style,
+	status,
 }: {
 	postId: string;
 	authorName?: string;
 	body: string;
 	style?: string | null;
+	status?: "pending" | "approved" | "rejected";
 }) {
 	return db
 		.insert(comments)
@@ -151,6 +183,7 @@ export async function createComment({
 			authorName: authorName?.trim() || "Anonymous",
 			body,
 			style: style ?? null,
+			...(status ? { status } : {}),
 		})
 		.returning();
 }

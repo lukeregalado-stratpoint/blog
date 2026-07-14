@@ -2,7 +2,11 @@
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { isAuthenticated } from "@/lib/auth";
-import { createComment, updateCommentStatus } from "@/lib/db/queries";
+import {
+	createComment,
+	getPostAutoApproveComments,
+	updateCommentStatus,
+} from "@/lib/db/queries";
 
 const commentSchema = z.object({
 	authorName: z
@@ -61,7 +65,15 @@ export async function addCommentAction(
 	const style =
 		bold || italic || color ? JSON.stringify({ bold, italic, color }) : null;
 
-	await createComment({ postId, authorName, body, style });
+	const autoApprove = await getPostAutoApproveComments(postId);
+
+	await createComment({
+		postId,
+		authorName,
+		body,
+		style,
+		status: autoApprove ? "approved" : "pending",
+	});
 
 	revalidateTag(`comments-${postId}`, "seconds");
 

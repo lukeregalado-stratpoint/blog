@@ -1,7 +1,7 @@
 // lib/db/schema.ts
 
 import { relations, sql } from "drizzle-orm";
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const posts = pgTable("posts", {
 	id: uuid("id").primaryKey().defaultRandom(),
@@ -11,6 +11,7 @@ export const posts = pgTable("posts", {
 	imageSrc: text("image_src"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	tags: text('tags').array().notNull().default(sql`'{}'::text[]`),
+	autoApproveComments: boolean("auto_approve_comments").notNull().default(true),
 });
 
 export const comments = pgTable("comments", {

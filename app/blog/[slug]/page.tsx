@@ -60,6 +60,20 @@ export default async function PostPage({
 						<span>·</span>
 						<span>Luke Regalado</span>
 					</div>
+
+					{post.tags && post.tags.length > 0 && (
+						<div className="flex flex-wrap gap-2 mt-3">
+							{post.tags.map((tag) => (
+								<span
+									key={tag}
+									className="text-xs px-2.5 py-1 rounded-full bg-[#283618]/10 text-[#283618]"
+								>
+									{tag}
+								</span>
+							))}
+						</div>
+					)}
+
 					<div className="hidden md:block mt-10 md:mt-0 min-w-0 wrap-break-word md:col-start-1 md:row-start-2">
 						<Suspense fallback={<CommentsSkeleton />}>
 							<CommentsSection postId={post.id} />

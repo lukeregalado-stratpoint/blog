@@ -1,0 +1,1 @@
+ALTER TABLE "posts" ADD COLUMN "auto_approve_comments" boolean DEFAULT true NOT NULL;

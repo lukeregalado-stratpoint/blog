@@ -21,6 +21,7 @@ export async function createPostAction(formData: FormData) {
 	const tags = tagsRaw
 		? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
 		: [];
+	const autoApproveComments = formData.get("autoApproveComments") === "true";
 
 	let imageSrc: string | undefined;
 	if (file && file.size > 0) {
@@ -37,7 +38,7 @@ export async function createPostAction(formData: FormData) {
 	}
 
 	const slug = slugify(title);
-	await createPost({ title, slug, body, imageSrc, tags });
+	await createPost({ title, slug, body, imageSrc, tags, autoApproveComments });
 	revalidateTag("posts", "hours");
 	redirect(`/blog/${slug}`);
 }
@@ -55,6 +56,7 @@ export async function updatePostAction(formData: FormData) {
 	const tags = tagsRaw
 		? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
 		: [];
+	const autoApproveComments = formData.get("autoApproveComments") === "true";
 
 	let imageSrc: string | undefined;
 	if (file && file.size > 0) {
@@ -71,7 +73,7 @@ export async function updatePostAction(formData: FormData) {
 	}
 
 	const slug = slugify(title);
-	await updatePost({ id, title, slug, body, imageSrc, tags });
+	await updatePost({ id, title, slug, body, imageSrc, tags, autoApproveComments });
 	revalidateTag("posts", "hours");
 	redirect(`/blog/${slug}`);
 }
