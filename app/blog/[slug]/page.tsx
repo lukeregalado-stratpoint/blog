@@ -41,7 +41,7 @@ export default async function PostPage({
 	}
 
 	return (
-		<article className="px-4 py-6 min-w-full max-w-5xl pt-20 md:px-8 md:grid md:grid-cols-3 md:gap-10">
+		<article className="bg-grain bg-[#1f2421] px-4 py-6 min-w-full max-w-5xl pt-20 md:px-8 md:grid md:grid-cols-3 md:gap-10">
 			<div className="md:col-start-1 md:row-start-1">
 				<div className="relative z-10 w-full h-[50vh] md:h-[28vw] md:min-h-75 md:rounded-b-3xl rounded-t-3xl shadow-2xl">
 					<Image

@@ -42,7 +42,7 @@ export default function BlogFilterClient({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search posts..."
-            className="w-full rounded-full border border-[#003049]/20 bg-white/60 py-2 pl-9 pr-8 text-sm text-[#003049] placeholder:text-[#003049]/40 focus:outline-none focus:ring-2 focus:ring-[#003049]/30"
+            className="w-full border border-[#003049]/20 bg-white/60 py-2 pl-9 pr-8 text-sm text-[#003049] placeholder:text-[#003049]/40 focus:outline-none focus:ring-2 focus:ring-[#003049]/30"
           />
           {query && (
             <button
@@ -61,7 +61,7 @@ export default function BlogFilterClient({
             <button
               type="button"
               onClick={() => setActiveTag("")}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+              className={`rounded-sm px-3 py-1 text-xs font-medium transition ${
                 activeTag === ""
                   ? "bg-[#003049] text-white"
                   : "bg-[#003049]/10 text-[#003049] hover:bg-[#003049]/20"
@@ -74,7 +74,7 @@ export default function BlogFilterClient({
                 key={tag}
                 type="button"
                 onClick={() => setActiveTag(activeTag === tag ? "" : tag)}
-                className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+                className={`rounded-sm px-3 py-1 text-xs font-medium transition ${
                   activeTag === tag
                     ? "bg-[#003049] text-white"
                     : "bg-[#003049]/10 text-[#003049] hover:bg-[#003049]/20"
@@ -92,7 +92,7 @@ export default function BlogFilterClient({
           No posts match your search.
         </p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="blog-grid flex flex-col gap-3">
           {filtered.map((item) => item.element)}
         </div>
       )}

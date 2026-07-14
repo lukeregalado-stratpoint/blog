@@ -8,7 +8,7 @@ export async function getAllPosts() {
 	cacheTag("posts");
 	cacheLife("hours");
 
-	return db.select().from(posts);
+	return db.select().from(posts).orderBy(desc(posts.createdAt));
 }
 
 export async function getPostThumbnails(limit = 24) {
@@ -189,6 +189,23 @@ export async function getCommentsForPost(postId: string, admin = false) {
 		.from(comments)
 		.where(conditions)
 		.orderBy(desc(comments.createdAt));
+}
+
+export async function getCommentsPreviewForPost(postId: string, limit = 6) {
+	"use cache";
+	cacheTag(`comments-${postId}`);
+	cacheLife("seconds");
+
+	return db
+		.select({
+			id: comments.id,
+			body: comments.body,
+			authorName: comments.authorName,
+		})
+		.from(comments)
+		.where(and(eq(comments.postId, postId), eq(comments.status, "approved")))
+		.orderBy(desc(comments.createdAt))
+		.limit(limit);
 }
 
 export async function getPostAutoApproveComments(postId: string) {

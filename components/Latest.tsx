@@ -18,7 +18,7 @@ export default async function Latest() {
 				<Link
 					key={post.id}
 					href={`/blog/${post.slug}`}
-					className="group relative block h-72 overflow-hidden rounded-2xl transition hover:shadow-md hover:-translate-y-0.5"
+					className="group relative block h-72 overflow-hidden transition hover:shadow-md hover:-translate-y-0.5"
 				>
 					<Image
 						src={post.imageSrc ?? "/placeholder.jpg"}

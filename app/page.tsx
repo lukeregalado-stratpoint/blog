@@ -30,6 +30,7 @@ export default async function Page() {
             md:rounded-b-3xl
             rounded-t-3xl
             shadow-2xl
+			bg-grain
           "
 				>
 					{featured && (
@@ -43,7 +44,7 @@ export default async function Page() {
 				</section>
 			</div>
 
-			<section className="relative z-10 min-h-screen bg-[#f1faee]/95 md:rounded-t-3xl shadow-2xl px-8 pt-25 pb-8">
+			<section className="relative z-10 min-h-screen bg-[#f1faee]/95 bg-grain shadow-2xl px-8 pt-25 pb-8">
 				<h2 className="text-3xl font-bold font-serif text-black">
 					Latest posts
 				</h2>
