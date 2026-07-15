@@ -15,9 +15,10 @@ type Sticker = {
 	rotation: number | null;
 };
 
-const POPUP_WIDTH = 176; 
-const POPUP_HEIGHT = 116;
+const POPUP_WIDTH = 176;
+const POPUP_HEIGHT = 148;
 const VIEWPORT_MARGIN = 8;
+const HIDE_STICKERS_KEY = "hideStickers";
 
 export default function StickerLayer({
 	postId,
@@ -41,8 +42,19 @@ export default function StickerLayer({
     );
 	const [stickerList, setStickerList] = useState<Sticker[]>(initialStickers);
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
+	const [hideStickers, setHideStickers] = useState(false);
 	const [, startTransition] = useTransition();
-    
+
+	// load the viewer's saved preference once on mount
+	useEffect(() => {
+		const stored = window.localStorage.getItem(HIDE_STICKERS_KEY);
+		if (stored === "true") setHideStickers(true);
+	}, []);
+
+	function handleHideStickersChange(checked: boolean) {
+		setHideStickers(checked);
+		window.localStorage.setItem(HIDE_STICKERS_KEY, String(checked));
+	}
 
 	const computePopupPosition = useCallback(() => {
 		const btn = pickerButtonRef.current;
@@ -67,7 +79,7 @@ export default function StickerLayer({
 		}
 
 		setPopupPos({ top, left });
-	}, []); 
+	}, []);
 
 	function togglePicker() {
 		if (!pickerOpen) computePopupPosition();
@@ -133,7 +145,6 @@ export default function StickerLayer({
     }
 
 	function handleRemove(stickerId: string) {
-        // drops the optimistic entry locally
         if (stickerId.startsWith("temp-")) {
             setStickerList((prev) => prev.filter((s) => s.id !== stickerId));
             return;
@@ -158,39 +169,40 @@ export default function StickerLayer({
                     placingEmoji ? "cursor-none" : "pointer-events-none"
                 }`}
             >
-				{stickerList.map((sticker) => (
-                    <div
-                        key={sticker.id}
-                        className="absolute w-8 h-8 md:w-20 md:h-20 pointer-events-auto select-none group/sticker"
-                        style={{
-                            left: `${sticker.x}%`,
-                            top: `${sticker.y}%`,
-                            transform: `translate(-50%, -50%) rotate(${sticker.rotation ?? 0}deg)`,
-                        }}
-                    >
-                        <Image
-                            src={getStickerSrc(sticker.emoji) ?? "/stickers/nudaeng_huh.png"}
-                            alt=""
-                            fill
-                            sizes="64px"
-                            className="object-contain pointer-events-none"
-                        />
-                        {admin && (
-                            <button
-                                type="button"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRemove(sticker.id);
-                                }}
-                                className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs 
-                                    leading-5 opacity-0 group-hover/sticker:opacity-100 transition-opacity cursor-pointer z-10"
-                                aria-label="Remove sticker"
-                            >
-                                ✖
-                            </button>
-                        )}
-                    </div>
-                ))}
+				{!hideStickers &&
+                    stickerList.map((sticker) => (
+                        <div
+                            key={sticker.id}
+                            className="absolute w-8 h-8 md:w-20 md:h-20 pointer-events-auto select-none group/sticker"
+                            style={{
+                                left: `${sticker.x}%`,
+                                top: `${sticker.y}%`,
+                                transform: `translate(-50%, -50%) rotate(${sticker.rotation ?? 0}deg)`,
+                            }}
+                        >
+                            <Image
+                                src={getStickerSrc(sticker.emoji) ?? "/stickers/nudaeng_huh.png"}
+                                alt=""
+                                fill
+                                sizes="64px"
+                                className="object-contain pointer-events-none"
+                            />
+                            {admin && (
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRemove(sticker.id);
+                                    }}
+                                    className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs 
+                                        leading-5 opacity-0 group-hover/sticker:opacity-100 transition-opacity cursor-pointer z-10"
+                                    aria-label="Remove sticker"
+                                >
+                                    ✖
+                                </button>
+                            )}
+                        </div>
+                    ))}
 
 				{placingEmoji && (
 					<div
@@ -233,7 +245,7 @@ export default function StickerLayer({
 								flex items-center justify-center cursor-pointer opacity-50 hover:opacity-100 transition"
 							aria-label="Add sticker"
 						>
-							⟡
+							✮
 						</button>
 					)}
 				</div>
@@ -263,6 +275,19 @@ export default function StickerLayer({
                                 />
                             </button>
                         ))}
+
+                        <div className="col-span-4 border-t border-white/10 mt-1 pt-1.5 px-0.5">
+                            <label className="flex items-center gap-1.5 text-white/70 text-[11px] cursor-pointer select-none">
+                                <input
+                                    type="checkbox"
+                                    checked={hideStickers}
+                                    onChange={(e) =>
+                                        handleHideStickersChange(e.target.checked)
+                                    }
+                                />
+                                Hide stickers
+                            </label>
+                        </div>
                     </div>,
                     document.body,
                 )}
