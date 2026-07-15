@@ -12,5 +12,5 @@ export default async function EditPostPage({
 
 	if (!post) notFound();
 
-	return <EditPostForm post={post} />;
+	return <EditPostForm post={post} key="post.id" />;
 }

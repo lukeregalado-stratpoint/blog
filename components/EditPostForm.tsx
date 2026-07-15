@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { updatePostAction, type PostFormState } from "@/lib/actions/posts";
 import BodyEditor from "@/components/BodyEditor";
+
 
 type Post = {
 	id: string;
@@ -40,6 +41,12 @@ export default function EditPostForm({ post }: { post: Post }) {
 		post.autoApproveComments ?? true,
 	);
 	const [body, setBody] = useState(post.body);
+
+	useEffect(() => {
+		setBody(post.body);
+		setTagsInput(post.tags?.join(", ") ?? "");
+		setAutoApproveComments(post.autoApproveComments ?? true);
+	}, [post.body, post.autoApproveComments, post.tags]);
 
 	function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
