@@ -1,4 +1,6 @@
-export function excerpt(body: string, len = 120) {
-	const clean = body.replace(/\s+/g, " ").trim();
-	return clean.length > len ? `${clean.slice(0, len)}...` : clean;
+import { stripBodyMarkup } from "./markup";
+
+export function excerpt(body: string, maxLength = 140): string {
+  const plain = stripBodyMarkup(body);
+  return plain.length > maxLength ? `${plain.slice(0, maxLength).trim()}…` : plain;
 }

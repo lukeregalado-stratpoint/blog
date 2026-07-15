@@ -2,6 +2,7 @@ import FeaturedArticle from "@/components/FeaturedArticle";
 import Landing from "@/components/Landing";
 import Latest from "@/components/Latest";
 import { getFeaturedPost, getPostThumbnails } from "@/lib/db/queries";
+import { excerpt } from "@/lib/utils";
 
 export default async function Page() {
 	const [featured, thumbnails] = await Promise.all([
@@ -37,7 +38,7 @@ export default async function Page() {
 						<FeaturedArticle
 							slug={slug}
 							title={title}
-							excerpt={`${body.slice(0, 120)}...`}
+							excerpt={excerpt(body, 120)}
 							imageSrc={imageSrc}
 						/>
 					)}

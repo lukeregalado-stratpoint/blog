@@ -46,7 +46,7 @@ export default function Header() {
 			className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between min-w-full px-4 md:px-8
                     backdrop-blur-lg rounded-b-lg shadow-xl"
 		>
-			<div className="relative w-40 h-10 p-2">
+			<div className="relative w-40 h-10 ml-2.5 p-2">
 				<Link href="/">
 					<svg className="w-full h-full text-2xl font-black tracking-[-0.02em] overflow-visible">
 						<title>logo</title>
