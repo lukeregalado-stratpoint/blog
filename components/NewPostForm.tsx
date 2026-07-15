@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { createPostAction, type PostFormState } from "@/lib/actions/posts";
+import BodyEditor from "@/components/BodyEditor";
 
 const initialState: PostFormState = { errors: {} };
 
@@ -24,6 +25,7 @@ export default function NewPostForm() {
 	const [preview, setPreview] = useState<string | null>(null);
 	const [tagsInput, setTagsInput] = useState(""); // no existing post to prefill from
 	const [autoApproveComments, setAutoApproveComments] = useState(true);
+	const [body, setBody] = useState("");
 
 	function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
@@ -133,9 +135,9 @@ export default function NewPostForm() {
 					</div>
 				</div>
 				<div className="col-span-2 mt-4 md:mt-0 md:mr-5 md:col-start-2 md:row-start-1">
-					<textarea
-						name="body"
-						required
+					<BodyEditor
+						value={body}
+						onChange={setBody}
 						rows={16}
 						placeholder="Write your post..."
 						className="whitespace-pre-line prose prose-lg text-xl w-full md:prose-base font-libre bg-transparent 

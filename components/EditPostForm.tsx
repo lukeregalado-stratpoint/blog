@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { updatePostAction, type PostFormState } from "@/lib/actions/posts";
+import BodyEditor from "@/components/BodyEditor";
 
 type Post = {
 	id: string;
@@ -38,6 +39,7 @@ export default function EditPostForm({ post }: { post: Post }) {
 	const [autoApproveComments, setAutoApproveComments] = useState(
 		post.autoApproveComments ?? true,
 	);
+	const [body, setBody] = useState(post.body);
 
 	function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
@@ -153,10 +155,9 @@ export default function EditPostForm({ post }: { post: Post }) {
 				</div>
 
 				<div className="col-span-2 mt-4 md:mt-0 md:mr-5 md:col-start-2 md:row-start-1">
-					<textarea
-						name="body"
-						defaultValue={post.body}
-						required
+					<BodyEditor
+						value={body}
+						onChange={setBody}
 						rows={16}
 						placeholder="Write your post..."
 						className="whitespace-pre-line prose prose-lg text-xl w-full md:prose-base font-libre bg-transparent 

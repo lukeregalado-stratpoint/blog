@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import BodyRenderer from "@/components/BodyRenderer";
 import Comments from "@/components/Comments";
 import StickerLayer from "@/components/StickerLayer";
 import { isAuthenticated } from "@/lib/auth";
@@ -100,12 +101,11 @@ export default async function PostPage({
 			</div>
 
 			<div
-				className="whitespace-pre-line prose prose-lg text-xl col-span-2 min-w-auto md:prose-base font-libre 
-                      mt-4 md:mt-0 md:mr-5 md:col-start-2 md:row-start-1 wrap-break-word"
+				className="prose prose-lg text-xl col-span-2 min-w-auto md:prose-base font-libre 
+							mt-4 md:mt-0 md:mr-5 md:col-start-2 md:row-start-1 wrap-break-word"
 			>
-				{post.body}
+				<BodyRenderer body={post.body} />
 			</div>
-
 			<div className="mt-10 md:hidden min-w-0 wrap-break-word">
 				<Suspense fallback={<CommentsSkeleton />}>
 					<CommentsSection postId={post.id} />
