@@ -1,9 +1,11 @@
 "use server";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import { isAuthenticated } from "@/lib/auth";
 import { cloudinary } from "@/lib/cloudinary";
 import { createPost, updatePost } from "@/lib/db/queries";
+import type { UploadApiResponse } from "cloudinary";
 
 function slugify(title: string) {
 	return title
@@ -13,28 +15,59 @@ function slugify(title: string) {
 		.replace(/\s+/g, "-");
 }
 
+async function uploadImage(file: File): Promise<string> {
+	const buffer = Buffer.from(await file.arrayBuffer());
+	const result = await new Promise<UploadApiResponse>((resolve, reject) => {
+		cloudinary.uploader
+			.upload_stream({ folder: "posts" }, (err, res) => {
+				if (err || !res) reject(err);
+				else resolve(res);
+			})
+			.end(buffer);
+	});
+	return result.secure_url;
+}
+
+const postSchema = z.object({
+	title: z.string().trim().min(1, "Title is required."),
+	body: z.string().trim().min(1, "Body is required."),
+	tags: z.string().optional(),
+	autoApproveComments: z.string().optional(),
+	image: z
+		.instanceof(File)
+		.optional()
+		.nullable()
+		.refine((file) => !file || file.size === 0 || file.size <= 10 * 1024 * 1024, {
+			message: "Image must be 10MB or smaller.",
+		}),
+});
+
+const updatePostSchema = postSchema.extend({
+	id: z.string().trim().min(1, "Missing post id."),
+});
+
 export async function createPostAction(formData: FormData) {
-	const title = formData.get("title") as string;
-	const body = formData.get("body") as string;
-	const file = formData.get("image") as File | null;
-	const tagsRaw = formData.get("tags") as string;
-	const tags = tagsRaw
-		? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
+	const result = postSchema.safeParse({
+		title: formData.get("title"),
+		body: formData.get("body"),
+		tags: formData.get("tags") ?? undefined,
+		autoApproveComments: formData.get("autoApproveComments") ?? undefined,
+		image: formData.get("image"),
+	});
+
+	if (!result.success) {
+		throw new Error(result.error.issues.map((i) => i.message).join(" "));
+	}
+
+	const { title, body, image: file } = result.data;
+	const tags = result.data.tags
+		? result.data.tags.split(",").map((t) => t.trim()).filter(Boolean)
 		: [];
-	const autoApproveComments = formData.get("autoApproveComments") === "true";
+	const autoApproveComments = result.data.autoApproveComments === "true";
 
 	let imageSrc: string | undefined;
 	if (file && file.size > 0) {
-		const buffer = Buffer.from(await file.arrayBuffer());
-		const result = await new Promise<any>((resolve, reject) => {
-			cloudinary.uploader
-				.upload_stream({ folder: "posts" }, (err, res) => {
-					if (err) reject(err);
-					else resolve(res);
-				})
-				.end(buffer);
-		});
-		imageSrc = result.secure_url;
+		imageSrc = await uploadImage(file);
 	}
 
 	const slug = slugify(title);
@@ -48,28 +81,28 @@ export async function updatePostAction(formData: FormData) {
 		redirect("/");
 	}
 
-	const id = formData.get("id") as string;
-	const title = formData.get("title") as string;
-	const body = formData.get("body") as string;
-	const file = formData.get("image") as File | null;
-	const tagsRaw = formData.get("tags") as string;
-	const tags = tagsRaw
-		? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
+	const result = updatePostSchema.safeParse({
+		id: formData.get("id"),
+		title: formData.get("title"),
+		body: formData.get("body"),
+		tags: formData.get("tags") ?? undefined,
+		autoApproveComments: formData.get("autoApproveComments") ?? undefined,
+		image: formData.get("image"),
+	});
+
+	if (!result.success) {
+		throw new Error(result.error.issues.map((i) => i.message).join(" "));
+	}
+
+	const { id, title, body, image: file } = result.data;
+	const tags = result.data.tags
+		? result.data.tags.split(",").map((t) => t.trim()).filter(Boolean)
 		: [];
-	const autoApproveComments = formData.get("autoApproveComments") === "true";
+	const autoApproveComments = result.data.autoApproveComments === "true";
 
 	let imageSrc: string | undefined;
 	if (file && file.size > 0) {
-		const buffer = Buffer.from(await file.arrayBuffer());
-		const result = await new Promise<any>((resolve, reject) => {
-			cloudinary.uploader
-				.upload_stream({ folder: "posts" }, (err, res) => {
-					if (err) reject(err);
-					else resolve(res);
-				})
-				.end(buffer);
-		});
-		imageSrc = result.secure_url;
+		imageSrc = await uploadImage(file);
 	}
 
 	const slug = slugify(title);

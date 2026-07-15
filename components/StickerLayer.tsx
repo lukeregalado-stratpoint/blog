@@ -259,7 +259,7 @@ export default function StickerLayer({
                                     alt={sticker.id}
                                     width={24}
                                     height={24}
-                                    className="object-contain"
+                                    className="object-contain w-6 h-6"
                                 />
                             </button>
                         ))}

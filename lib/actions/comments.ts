@@ -9,6 +9,7 @@ import {
 } from "@/lib/db/queries";
 
 const commentSchema = z.object({
+	postId: z.string().trim().min(1, "Missing post id."),
 	authorName: z
 		.string()
 		.trim()
@@ -28,6 +29,11 @@ const commentSchema = z.object({
 		.optional(),
 });
 
+const commentActionSchema = z.object({
+	commentId: z.string().trim().min(1, "Missing comment id."),
+	postId: z.string().trim().min(1, "Missing post id."),
+});
+
 export type CommentFormState = {
 	errors: {
 		body?: string;
@@ -40,9 +46,8 @@ export async function addCommentAction(
 	_prevState: CommentFormState,
 	formData: FormData,
 ): Promise<CommentFormState> {
-	const postId = formData.get("postId") as string;
-
 	const result = commentSchema.safeParse({
+		postId: formData.get("postId"),
 		authorName: formData.get("authorName"),
 		body: formData.get("body"),
 		bold: formData.get("bold") === "on",
@@ -61,7 +66,7 @@ export async function addCommentAction(
 		};
 	}
 
-	const { authorName, body, bold, italic, color } = result.data;
+	const { postId, authorName, body, bold, italic, color } = result.data;
 	const style =
 		bold || italic || color ? JSON.stringify({ bold, italic, color }) : null;
 
@@ -82,12 +87,20 @@ export async function addCommentAction(
 
 export async function approveCommentAction(commentId: string, postId: string) {
 	if (!(await isAuthenticated())) return;
-	await updateCommentStatus(commentId, "approved");
-	revalidateTag(`comments-${postId}`, "seconds");
+
+	const result = commentActionSchema.safeParse({ commentId, postId });
+	if (!result.success) return;
+
+	await updateCommentStatus(result.data.commentId, "approved");
+	revalidateTag(`comments-${result.data.postId}`, "seconds");
 }
 
 export async function rejectCommentAction(commentId: string, postId: string) {
 	if (!(await isAuthenticated())) return;
-	await updateCommentStatus(commentId, "rejected");
-	revalidateTag(`comments-${postId}`, "seconds");
+
+	const result = commentActionSchema.safeParse({ commentId, postId });
+	if (!result.success) return;
+
+	await updateCommentStatus(result.data.commentId, "rejected");
+	revalidateTag(`comments-${result.data.postId}`, "seconds");
 }
