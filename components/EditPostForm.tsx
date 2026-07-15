@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { updatePostAction } from "@/lib/actions/posts";
+import { updatePostAction, type PostFormState } from "@/lib/actions/posts";
 
 type Post = {
 	id: string;
@@ -13,8 +13,10 @@ type Post = {
 	imageSrc: string | null;
 	tags: string[] | null;
 	createdAt: Date;
-	autoApproveComments?: boolean; 
+	autoApproveComments?: boolean;
 };
+
+const initialState: PostFormState = { errors: {} };
 
 function SaveButton() {
 	const { pending } = useFormStatus();
@@ -30,6 +32,7 @@ function SaveButton() {
 }
 
 export default function EditPostForm({ post }: { post: Post }) {
+	const [state, formAction] = useActionState(updatePostAction, initialState);
 	const [preview, setPreview] = useState<string | null>(null);
 	const [tagsInput, setTagsInput] = useState(post.tags?.join(", ") ?? "");
 	const [autoApproveComments, setAutoApproveComments] = useState(
@@ -44,7 +47,7 @@ export default function EditPostForm({ post }: { post: Post }) {
 	}
 
 	return (
-		<form action={updatePostAction}>
+		<form action={formAction}>
 			<input type="hidden" name="id" value={post.id} />
 			<input
 				type="hidden"
@@ -80,6 +83,9 @@ export default function EditPostForm({ post }: { post: Post }) {
 							className="hidden"
 						/>
 					</label>
+					{state.errors.image && (
+						<p className="text-red-500 text-xs mt-1">{state.errors.image}</p>
+					)}
 
 					<div className="mt-6">
 						<input
@@ -90,6 +96,9 @@ export default function EditPostForm({ post }: { post: Post }) {
 							className="text-2xl md:text-3xl font-serif font-bold w-full bg-transparent 
                         border-b border-[#283618]/30 focus:border-[#283618] outline-none pb-1"
 						/>
+						{state.errors.title && (
+							<p className="text-red-500 text-xs mt-1">{state.errors.title}</p>
+						)}
 						<div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
 							<time>
 								{new Date(post.createdAt).toLocaleDateString("en-US", {
@@ -153,6 +162,9 @@ export default function EditPostForm({ post }: { post: Post }) {
 						className="whitespace-pre-line prose prose-lg text-xl w-full md:prose-base font-libre bg-transparent 
                         border border-[#283618]/20 focus:border-[#283618]/50 rounded-lg p-3 outline-none resize-y"
 					/>
+					{state.errors.body && (
+						<p className="text-red-500 text-xs mt-1">{state.errors.body}</p>
+					)}
 				</div>
 
 				<div className="mt-6 md:hidden">

@@ -1,8 +1,10 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { createPostAction } from "@/lib/actions/posts";
+import { createPostAction, type PostFormState } from "@/lib/actions/posts";
+
+const initialState: PostFormState = { errors: {} };
 
 function PublishButton() {
 	const { pending } = useFormStatus();
@@ -18,6 +20,7 @@ function PublishButton() {
 }
 
 export default function NewPostForm() {
+	const [state, formAction] = useActionState(createPostAction, initialState);
 	const [preview, setPreview] = useState<string | null>(null);
 	const [tagsInput, setTagsInput] = useState(""); // no existing post to prefill from
 	const [autoApproveComments, setAutoApproveComments] = useState(true);
@@ -30,7 +33,7 @@ export default function NewPostForm() {
 	}
 
 	return (
-		<form action={createPostAction}>
+		<form action={formAction}>
 			<input
 				type="hidden"
 				name="autoApproveComments"
@@ -65,6 +68,9 @@ export default function NewPostForm() {
 							className="hidden"
 						/>
 					</label>
+					{state.errors.image && (
+						<p className="text-red-500 text-xs mt-1">{state.errors.image}</p>
+					)}
 					<div className="mt-6">
 						<input
 							name="title"
@@ -73,6 +79,9 @@ export default function NewPostForm() {
 							className="text-2xl md:text-3xl font-serif font-bold w-full bg-transparent 
                         border-b border-[#283618]/30 focus:border-[#283618] outline-none pb-1 placeholder:text-[#cream]/40"
 						/>
+						{state.errors.title && (
+							<p className="text-red-500 text-xs mt-1">{state.errors.title}</p>
+						)}
 						<div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
 							<time>
 								{new Date().toLocaleDateString("en-US", {
@@ -133,6 +142,9 @@ export default function NewPostForm() {
                     border border-[#283618]/20 focus:border-[#283618]/50 rounded-lg p-3 outline-none resize-y 
                     placeholder:text-[#283618]/30"
 					/>
+					{state.errors.body && (
+						<p className="text-red-500 text-xs mt-1">{state.errors.body}</p>
+					)}
 				</div>
 				<div className="mt-6 md:hidden">
 					<PublishButton />

@@ -28,7 +28,7 @@ export async function loginAction(
 	}
 
 	await createSession();
-	redirect("/blog/new");
+	redirect("/");
 }
 
 export async function logoutAction() {

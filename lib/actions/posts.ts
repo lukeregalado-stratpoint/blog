@@ -37,8 +37,8 @@ const postSchema = z.object({
 		.instanceof(File)
 		.optional()
 		.nullable()
-		.refine((file) => !file || file.size === 0 || file.size <= 10 * 1024 * 1024, {
-			message: "Image must be 10MB or smaller.",
+		.refine((file) => !file || file.size === 0 || file.size <= 25 * 1024 * 1024, {
+			message: "Image must be 5MB or smaller.",
 		}),
 });
 
@@ -46,7 +46,18 @@ const updatePostSchema = postSchema.extend({
 	id: z.string().trim().min(1, "Missing post id."),
 });
 
-export async function createPostAction(formData: FormData) {
+export type PostFormState = {
+	errors: {
+		title?: string;
+		body?: string;
+		image?: string;
+	};
+};
+
+export async function createPostAction(
+	_prevState: PostFormState,
+	formData: FormData,
+): Promise<PostFormState> {
 	const result = postSchema.safeParse({
 		title: formData.get("title"),
 		body: formData.get("body"),
@@ -56,7 +67,14 @@ export async function createPostAction(formData: FormData) {
 	});
 
 	if (!result.success) {
-		throw new Error(result.error.issues.map((i) => i.message).join(" "));
+		const fieldErrors = result.error.flatten().fieldErrors;
+		return {
+			errors: {
+				title: fieldErrors.title?.[0],
+				body: fieldErrors.body?.[0],
+				image: fieldErrors.image?.[0],
+			},
+		};
 	}
 
 	const { title, body, image: file } = result.data;
@@ -76,7 +94,10 @@ export async function createPostAction(formData: FormData) {
 	redirect(`/blog/${slug}`);
 }
 
-export async function updatePostAction(formData: FormData) {
+export async function updatePostAction(
+	_prevState: PostFormState,
+	formData: FormData,
+): Promise<PostFormState> {
 	if (!(await isAuthenticated())) {
 		redirect("/");
 	}
@@ -91,7 +112,14 @@ export async function updatePostAction(formData: FormData) {
 	});
 
 	if (!result.success) {
-		throw new Error(result.error.issues.map((i) => i.message).join(" "));
+		const fieldErrors = result.error.flatten().fieldErrors;
+		return {
+			errors: {
+				title: fieldErrors.title?.[0],
+				body: fieldErrors.body?.[0],
+				image: fieldErrors.image?.[0],
+			},
+		};
 	}
 
 	const { id, title, body, image: file } = result.data;
