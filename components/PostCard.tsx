@@ -31,7 +31,7 @@ export default function PostCard({ post }: { post: any }) {
       </Suspense>
 
       <div className="relative z-10 flex min-w-0 flex-col justify-center px-4 py-3 
-                      sm:py-2  sm:shrink-0">
+                sm:flex-1 sm:max-w-[35vw] pr-6">
         <div className="flex items-center gap-2">
           <time className="text-xs uppercase tracking-wide text-[#283618]/60">
             {new Date(post.createdAt).toLocaleDateString("en-US", {
@@ -45,7 +45,7 @@ export default function PostCard({ post }: { post: any }) {
           </Suspense>
         </div>
 
-        <h3 className="mt-1 text-lg font-semibold font-serif text-[#283618] group-hover:underline">
+        <h3 className="mt-1 text-lg font-semibold font-serif text-[#283618] group-hover:underline whitespace-nowrap">
           {post.title}
         </h3>
 

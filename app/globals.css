@@ -72,7 +72,7 @@
 }
 
 .blog-grid:has(> a:hover) > a:not(:hover) {
-	filter: blur(1px);
+	filter: blur(.5px);
 	opacity: 0.9;
 }
 
@@ -95,10 +95,10 @@ body {
 
 @keyframes marquee-scroll {
 	from {
-		transform: translateX(300%);
+		transform: translateX(150cqw);
 	}
 	to {
-		transform: translateX(-100%);
+		transform: translateX(-100cqw);
 	}
 }
 
