@@ -1,11 +1,20 @@
+import { Suspense } from "react";
 import { getAllPosts } from "@/lib/db/queries";
-import BlogFilterClient from "@/components/BlogFilterClient";
 import PostCard from "@/components/PostCard";
+import BlogFilterClient from "@/components/BlogFilterClient";
 
-export default async function BlogPage() {
-  const allPosts = await getAllPosts();
+export default function BlogPage() {
+  return (
+    <div className="pt-20 px-8 pb-8 bg-[#f1faee] bg-grain min-h-screen">
+      <Suspense fallback={<BlogListSkeleton />}>
+        <BlogList />
+      </Suspense>
+    </div>
+  );
+}
 
-  console.log("BLOG:", allPosts);
+async function BlogList() {
+  const allPosts = await getAllPosts(); // now uncached, runs per-request
 
   const items = allPosts.map((post) => ({
     id: post.id,
@@ -17,9 +26,9 @@ export default async function BlogPage() {
 
   const tags = Array.from(new Set(allPosts.flatMap((p) => p.tags ?? []))).sort();
 
-  return (
-    <div className="pt-20 px-8 pb-8 bg-[#f1faee] bg-grain min-h-screen">
-      <BlogFilterClient items={items} tags={tags} />
-    </div>
-  );
+  return <BlogFilterClient items={items} tags={tags} />;
+}
+
+function BlogListSkeleton() {
+  return <div>Loading posts...</div>; // match your existing skeleton style
 }
