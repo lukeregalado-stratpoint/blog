@@ -5,6 +5,8 @@ import PostCard from "@/components/PostCard";
 export default async function BlogPage() {
   const allPosts = await getAllPosts();
 
+  console.log("BLOG:", allPosts);
+
   const items = allPosts.map((post) => ({
     id: post.id,
     title: post.title,

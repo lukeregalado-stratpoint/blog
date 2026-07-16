@@ -6,6 +6,8 @@ import { excerpt } from "@/lib/utils";
 export default async function Latest() {
 	const latestPosts = await getLatestPosts(6);
 
+	console.log("LATEST:", latestPosts);
+
 	if (latestPosts.length === 0) {
 		return (
 			<p className="text-gray-500 mt-4">No posts yet - check back soon.</p>
