@@ -1,24 +1,33 @@
-const skeletonKeys = ["sk-1", "sk-2", "sk-3", "sk-4", "sk-5", "sk-6"];
-
-export default function Loading() {
+export default function BlogLoading() {
 	return (
-		<div className="pt-20 px-8 pb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 bg-cream">
-			{skeletonKeys.map((key) => (
-				<div
-					key={key}
-					className="relative block h-72 overflow-hidden rounded-2xl bg-black/10 animate-pulse"
-				>
-					<div className="relative z-10 flex h-full flex-col justify-between p-6">
-						<div className="h-6 w-24 rounded-xl bg-white/20" />
-						<div>
-							<div className="h-5 w-3/4 rounded bg-white/20" />
-							<div className="mt-2 h-4 w-full rounded bg-white/10" />
-							<div className="mt-1 h-4 w-2/3 rounded bg-white/10" />
-							<div className="mt-2 h-3 w-16 rounded bg-white/10" />
+		<div className="pt-20 px-8 pb-8 bg-[#f1faee] bg-grain min-h-screen animate-pulse">
+			<div className="flex flex-wrap gap-2 mb-8">
+				<div className="h-8 w-16 rounded-full bg-[#003049]/10" />
+				<div className="h-8 w-20 rounded-full bg-[#003049]/10" />
+				<div className="h-8 w-14 rounded-full bg-[#003049]/10" />
+				<div className="h-8 w-24 rounded-full bg-[#003049]/10" />
+			</div>
+
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				{Array.from({ length: 9 }).map((_, i) => (
+					<div
+						// biome-ignore lint/suspicious/noArrayIndexKey: static placeholder list, never reorders or mutates
+						key={i}
+						className="rounded-2xl overflow-hidden border border-[#003049]/10 bg-white/60"
+					>
+						<div className="w-full aspect-[4/3] bg-[#003049]/10" />
+						<div className="p-4 space-y-3">
+							<div className="h-5 w-4/5 rounded-sm bg-[#003049]/10" />
+							<div className="h-3.5 w-full rounded-sm bg-[#003049]/8" />
+							<div className="h-3.5 w-2/3 rounded-sm bg-[#003049]/8" />
+							<div className="flex gap-2 pt-1">
+								<div className="h-5 w-12 rounded-full bg-[#003049]/8" />
+								<div className="h-5 w-16 rounded-full bg-[#003049]/8" />
+							</div>
 						</div>
 					</div>
-				</div>
-			))}
+				))}
+			</div>
 		</div>
 	);
 }

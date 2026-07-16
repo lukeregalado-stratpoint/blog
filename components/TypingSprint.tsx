@@ -72,8 +72,8 @@ function generateWords(count: number): string[] {
 type CharState = "pending" | "correct" | "incorrect";
 
 export default function TypingSprint() {
-	// Start empty on both server and client so the very first render matches.
-	// The actual (random) word list is generated client-side after mount.
+	// init empty on both server and client so the very first render matches
+	// actual (random) word list is generated client-side after mount
 	const [words, setWords] = useState<string[]>([]);
 	const [mounted, setMounted] = useState(false);
 	const [wordIndex, setWordIndex] = useState(0);
@@ -130,19 +130,10 @@ export default function TypingSprint() {
 		};
 	}, []);
 
-	// Generate the (random) word list only after mount, client-side only.
-	// Doing this in render (or as a useState initializer) runs on both the
-	// server and the client, producing two different random sequences and
-	// triggering a hydration mismatch.
 	useEffect(() => {
 		setWords(generateWords(60));
 		setMounted(true);
 	}, []);
-
-	// Focus the input on mount instead of using the autoFocus attribute
-	useEffect(() => {
-		if (mounted) inputRef.current?.focus();
-	}, [mounted]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (status === "done") return;
@@ -186,7 +177,12 @@ export default function TypingSprint() {
 	};
 
 	return (
-		<div className="w-full py-16 px-6 md:px-12 lg:px-20 text-center">
+		<div className="w-full pb-16 pt-12 px-6 md:px-12 lg:px-20 text-center">
+            <div className="w-screen relative left-1/2 -translate-x-1/2 mb-5 border-b border-dashed border-[#003049]/80">
+                <span className="absolute left-6 md:left-12 -top-4 text-2xl bg-[current-bg-color] font-black text-black px-1">
+                    ✂
+                </span>
+            </div>
 			<h3 className="text-xl font-black uppercase tracking-wider text-[#1f2421]/80 mb-4 font-serif">
 				Taking a break? Try a 30-second typing sprint.
 			</h3>

@@ -46,7 +46,6 @@ export default async function Page() {
 				</section>
 			</div>
 
-			<div className="w-screen relative left-1/2 -translate-x-1/2 border-t border-dashed border-[#003049]/20" />
 
 			<section className="relative z-10 min-h-screen bg-[#f1faee]/95 bg-grain shadow-2xl px-8 pt-25 pb-8">
 				<h2 className="text-3xl font-bold font-serif text-black">
