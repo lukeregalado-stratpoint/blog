@@ -6,7 +6,7 @@ import { comments, posts, stickers } from "@/lib/db/schema";
 export async function getAllPosts() {
 	"use cache";
 	cacheTag("posts");
-	cacheLife("hours");
+	cacheLife("seconds");
 
 	return db.select().from(posts).orderBy(desc(posts.createdAt));
 }

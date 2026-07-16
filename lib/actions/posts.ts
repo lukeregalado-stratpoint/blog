@@ -136,6 +136,6 @@ export async function updatePostAction(
 
 	const slug = slugify(title);
 	await updatePost({ id, title, slug, body, imageSrc, tags, autoApproveComments });
-	revalidateTag("posts", "hours");
+	revalidateTag("posts", "seconds");
 	redirect(`/blog/${slug}`);
 }
