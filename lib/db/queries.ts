@@ -1,4 +1,4 @@
-import { and, count, desc, eq, ilike, isNotNull, or, sql } from "drizzle-orm";
+import { and, count, desc, eq, isNotNull } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/lib/db";
 import { comments, posts, stickers } from "@/lib/db/schema";

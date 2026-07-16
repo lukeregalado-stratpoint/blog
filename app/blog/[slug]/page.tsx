@@ -26,7 +26,11 @@ async function StickerSection({ postId }: { postId: string }) {
 	]);
 
 	return (
-		<StickerLayer postId={postId} initialStickers={postStickers} admin={admin} />
+		<StickerLayer
+			postId={postId}
+			initialStickers={postStickers}
+			admin={admin}
+		/>
 	);
 }
 
@@ -116,20 +120,26 @@ export default async function PostPage({
 	);
 }
 
-async function AdminActions({ slug, postId }: { slug: string; postId: string }) {
-    const admin = await isAuthenticated();
-    if (!admin) return null;
-    return (
-        <div className="flex items-center gap-3">
-            <Link
-                href={`/blog/${slug}/edit`}
-                className="text-sm underline text-blue-400 hover:text-blue-300"
-            >
-                Edit
-            </Link>
-            <DeletePostButton postId={postId} />
-        </div>
-    );
+async function AdminActions({
+	slug,
+	postId,
+}: {
+	slug: string;
+	postId: string;
+}) {
+	const admin = await isAuthenticated();
+	if (!admin) return null;
+	return (
+		<div className="flex items-center gap-3">
+			<Link
+				href={`/blog/${slug}/edit`}
+				className="text-sm underline text-blue-400 hover:text-blue-300"
+			>
+				Edit
+			</Link>
+			<DeletePostButton postId={postId} />
+		</div>
+	);
 }
 
 async function CommentsSection({ postId }: { postId: string }) {

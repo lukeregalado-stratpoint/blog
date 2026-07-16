@@ -58,7 +58,8 @@ export default function BodyEditor({
 		const end = el.selectionEnd;
 		const selected = value.slice(start, end);
 		const inner = selected || blockPlaceholder;
-		const next = value.slice(0, start) + open + inner + close + value.slice(end);
+		const next =
+			value.slice(0, start) + open + inner + close + value.slice(end);
 
 		onChange(next);
 
@@ -83,33 +84,33 @@ export default function BodyEditor({
 	}
 
 	async function handleFileSelected(e: React.ChangeEvent<HTMLInputElement>) {
-        const file = e.target.files?.[0];
-        if (!file) return;
+		const file = e.target.files?.[0];
+		if (!file) return;
 
-        setUploading(true);
-        setUploadError(null);
+		setUploading(true);
+		setUploadError(null);
 
-        const formData = new FormData();
-        formData.append("file", file);
+		const formData = new FormData();
+		formData.append("file", file);
 
-        const result = await uploadImageAction(formData);
-        setUploading(false);
+		const result = await uploadImageAction(formData);
+		setUploading(false);
 
-        if ("error" in result) {
-            setUploadError(result.error);
-            return;
-        }
+		if ("error" in result) {
+			setUploadError(result.error);
+			return;
+		}
 
-        const pos = insertPosRef.current;
-        const tag = `[image]${result.url}|${result.width}|${result.height}[/image]`;
-        const next = value.slice(0, pos) + tag + value.slice(pos);
-        onChange(next);
-        setImageModalOpen(false);
+		const pos = insertPosRef.current;
+		const tag = `[image]${result.url}|${result.width}|${result.height}[/image]`;
+		const next = value.slice(0, pos) + tag + value.slice(pos);
+		onChange(next);
+		setImageModalOpen(false);
 
-        requestAnimationFrame(() => {
-            textareaRef.current?.focus();
-        });
-    }
+		requestAnimationFrame(() => {
+			textareaRef.current?.focus();
+		});
+	}
 
 	return (
 		<div className="relative">
@@ -149,49 +150,52 @@ export default function BodyEditor({
 				className={className}
 			/>
 
-            {/* MODAL */}
+			{/* MODAL */}
 			{imageModalOpen && (
-                <div className="absolute left-0 right-0 top-full mt-2 z-50 flex justify-center">
-                    <div className="w-full max-w-sm bg-[#1a1a1a] border border-[#283618]/40 rounded-xl shadow-xl p-4">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm font-semibold text-[#f1faee]">
-                                Upload image
-                            </span>
-                            <button
-                                type="button"
-                                onClick={closeImageModal}
-                                className="text-[#f1faee]/60 hover:text-[#f1faee] text-sm cursor-pointer"
-                                aria-label="Close"
-                            >
-                                ✕
-                            </button>
-                        </div>
+				<div className="absolute left-0 right-0 top-full mt-2 z-50 flex justify-center">
+					<div className="w-full max-w-sm bg-[#1a1a1a] border border-[#283618]/40 rounded-xl shadow-xl p-4">
+						<div className="flex items-center justify-between mb-3">
+							<span className="text-sm font-semibold text-[#f1faee]">
+								Upload image
+							</span>
+							<button
+								type="button"
+								onClick={closeImageModal}
+								className="text-[#f1faee]/60 hover:text-[#f1faee] text-sm cursor-pointer"
+								aria-label="Close"
+							>
+								✕
+							</button>
+						</div>
 
-                        <label htmlFor="body-image-upload" className="block text-xs text-[#f1faee]/70 mb-2">
-                            Choose an image to upload to Cloudinary. It'll be inserted as an
-                            [image] block at your cursor.
-                        </label>
+						<label
+							htmlFor="body-image-upload"
+							className="block text-xs text-[#f1faee]/70 mb-2"
+						>
+							Choose an image to upload to Cloudinary. It'll be inserted as an
+							[image] block at your cursor.
+						</label>
 
-                        <input
-                            id="body-image-upload"
-                            type="file"
-                            accept="image/*"
-                            onChange={handleFileSelected}
-                            disabled={uploading}
-                            className="text-xs text-[#f1faee]/80 file:mr-2 file:py-1.5 file:px-3 file:rounded 
+						<input
+							id="body-image-upload"
+							type="file"
+							accept="image/*"
+							onChange={handleFileSelected}
+							disabled={uploading}
+							className="text-xs text-[#f1faee]/80 file:mr-2 file:py-1.5 file:px-3 file:rounded 
                                 file:border-0 file:bg-[#283618] file:text-[#f1faee] file:text-xs file:cursor-pointer 
                                 cursor-pointer disabled:opacity-50"
-                        />
+						/>
 
-                        {uploading && (
-                            <p className="text-xs text-[#f1faee]/60 mt-2">Uploading…</p>
-                        )}
-                        {uploadError && (
-                            <p className="text-xs text-red-400 mt-2">{uploadError}</p>
-                        )}
-                    </div>
-                </div>
-            )}
+						{uploading && (
+							<p className="text-xs text-[#f1faee]/60 mt-2">Uploading…</p>
+						)}
+						{uploadError && (
+							<p className="text-xs text-red-400 mt-2">{uploadError}</p>
+						)}
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

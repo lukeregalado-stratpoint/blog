@@ -1,5 +1,6 @@
 "use client";
 import {
+	type MotionValue,
 	motion,
 	useAnimationFrame,
 	useMotionTemplate,
@@ -7,8 +8,8 @@ import {
 	useScroll,
 	useSpring,
 	useTransform,
-	type MotionValue,
 } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 type Thumbnail = {
@@ -147,14 +148,19 @@ function Tile({
 							},
 						}}
 					>
-
-						<img
+						<Image
 							src={image.imageSrc}
 							alt=""
+							fill
+							sizes={`${slot.size}px`}
 							loading="lazy"
 							decoding="async"
-							className={`w-full h-full object-cover ${
-								i % 3 === 0 ? "blur-[3px]" : i % 3 === 1 ? "blur-[1px]" : "blur-none"
+							className={`object-cover ${
+								i % 3 === 0
+									? "blur-[3px]"
+									: i % 3 === 1
+										? "blur-[1px]"
+										: "blur-none"
 							}`}
 						/>
 					</motion.div>

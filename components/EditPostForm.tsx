@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { updatePostAction, type PostFormState } from "@/lib/actions/posts";
 import BodyEditor from "@/components/BodyEditor";
-
+import { type PostFormState, updatePostAction } from "@/lib/actions/posts";
 
 type Post = {
 	id: string;

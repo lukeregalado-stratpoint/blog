@@ -1,5 +1,8 @@
 import Image from "next/image";
-import { getCommentsPreviewForPost, getStickersForPost } from "@/lib/db/queries";
+import {
+	getCommentsPreviewForPost,
+	getStickersForPost,
+} from "@/lib/db/queries";
 import { getStickerSrc } from "@/lib/stickers";
 
 function stripHtml(html: string) {
@@ -42,22 +45,20 @@ export default async function PostCardMarquee({ postId }: { postId: string }) {
 	const items = [...commentItems, ...stickerItems];
 	if (items.length === 0) return null;
 
-	const track = [
-		...items.map((item) => ({ item, copy: "a" as const })),
-	];
+	const track = [...items.map((item) => ({ item, copy: "a" as const }))];
 
 	const randomDelay = -(Math.random() * MARQUEE_DURATION_SECONDS);
 
 	return (
-			<div
-				className="@container pointer-events-none absolute inset-y-0 left-[35vw] right-56 z-10 hidden overflow-hidden 
+		<div
+			className="@container pointer-events-none absolute inset-y-0 left-[35vw] right-56 z-10 hidden overflow-hidden 
 					opacity-40 transition-opacity duration-500 group-hover:opacity-90 
 					sm:block"
+		>
+			<div
+				className="absolute inset-y-0 flex h-full w-max animate-marquee items-center gap-3 whitespace-nowrap"
+				style={{ animationDelay: `${randomDelay}s` }}
 			>
-				<div
-					className="absolute inset-y-0 flex h-full w-max animate-marquee items-center gap-3 whitespace-nowrap"
-					style={{ animationDelay: `${randomDelay}s` }}
-				>
 				{track.map(({ item, copy }) =>
 					item.type === "comment" ? (
 						<span
@@ -71,12 +72,17 @@ export default async function PostCardMarquee({ postId }: { postId: string }) {
 							key={`sticker-${item.id}-${copy}`}
 							className="relative h-6 w-6 shrink-0"
 						>
-							<Image src={item.src} alt="" fill sizes="24px" className="object-contain" />
+							<Image
+								src={item.src}
+								alt=""
+								fill
+								sizes="24px"
+								className="object-contain"
+							/>
 						</span>
 					),
 				)}
 			</div>
-            
 		</div>
 	);
 }

@@ -1,12 +1,11 @@
 "use server";
+import type { UploadApiResponse } from "cloudinary";
 import { revalidateTag, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { isAuthenticated } from "@/lib/auth";
 import { cloudinary } from "@/lib/cloudinary";
-import { createPost, updatePost } from "@/lib/db/queries";
-import type { UploadApiResponse } from "cloudinary";
-import { deletePost } from "@/lib/db/queries";
+import { createPost, deletePost, updatePost } from "@/lib/db/queries";
 
 function slugify(title: string) {
 	return title
@@ -38,9 +37,12 @@ const postSchema = z.object({
 		.instanceof(File)
 		.optional()
 		.nullable()
-		.refine((file) => !file || file.size === 0 || file.size <= 25 * 1024 * 1024, {
-			message: "Image must be 5MB or smaller.",
-		}),
+		.refine(
+			(file) => !file || file.size === 0 || file.size <= 25 * 1024 * 1024,
+			{
+				message: "Image must be 5MB or smaller.",
+			},
+		),
 });
 
 const updatePostSchema = postSchema.extend({
@@ -80,7 +82,10 @@ export async function createPostAction(
 
 	const { title, body, image: file } = result.data;
 	const tags = result.data.tags
-		? result.data.tags.split(",").map((t) => t.trim()).filter(Boolean)
+		? result.data.tags
+				.split(",")
+				.map((t) => t.trim())
+				.filter(Boolean)
 		: [];
 	const autoApproveComments = result.data.autoApproveComments === "true";
 
@@ -125,7 +130,10 @@ export async function updatePostAction(
 
 	const { id, title, body, image: file } = result.data;
 	const tags = result.data.tags
-		? result.data.tags.split(",").map((t) => t.trim()).filter(Boolean)
+		? result.data.tags
+				.split(",")
+				.map((t) => t.trim())
+				.filter(Boolean)
 		: [];
 	const autoApproveComments = result.data.autoApproveComments === "true";
 
@@ -135,7 +143,15 @@ export async function updatePostAction(
 	}
 
 	const slug = slugify(title);
-	await updatePost({ id, title, slug, body, imageSrc, tags, autoApproveComments });
+	await updatePost({
+		id,
+		title,
+		slug,
+		body,
+		imageSrc,
+		tags,
+		autoApproveComments,
+	});
 	revalidateTag("posts", "seconds");
 	redirect(`/blog/${slug}`);
 }

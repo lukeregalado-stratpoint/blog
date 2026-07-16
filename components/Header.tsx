@@ -1,13 +1,13 @@
 // components/Header.tsx
 "use client";
-import { Suspense } from "react";
-import Link from "next/link";
 import {
 	motion,
 	useMotionTemplate,
 	useScroll,
 	useTransform,
 } from "framer-motion";
+import Link from "next/link";
+import { Suspense } from "react";
 import NavBar from "./NavBar";
 
 function NavBarFallback() {
@@ -15,12 +15,18 @@ function NavBarFallback() {
 		<nav>
 			<ul className="md:flex md:flex-row md:space-x-8 md:mt-0 md:p-0">
 				<li>
-					<a href="/" className="block py-2 px-3 md:p-0 md:px-5 font-lexend font-extrabold text-[#003049]">
+					<a
+						href="/"
+						className="block py-2 px-3 md:p-0 md:px-5 font-lexend font-extrabold text-[#003049]"
+					>
 						Home
 					</a>
 				</li>
 				<li>
-					<a href="/blog" className="block py-2 px-3 md:p-0 md:px-5 font-lexend font-extrabold text-[#003049]">
+					<a
+						href="/blog"
+						className="block py-2 px-3 md:p-0 md:px-5 font-lexend font-extrabold text-[#003049]"
+					>
 						Blog
 					</a>
 				</li>

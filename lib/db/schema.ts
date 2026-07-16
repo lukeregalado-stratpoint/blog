@@ -1,7 +1,14 @@
 // lib/db/schema.ts
 
 import { relations, sql } from "drizzle-orm";
-import { boolean, pgTable, real, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	pgTable,
+	real,
+	text,
+	timestamp,
+	uuid,
+} from "drizzle-orm/pg-core";
 
 export const posts = pgTable("posts", {
 	id: uuid("id").primaryKey().defaultRandom(),
@@ -10,7 +17,7 @@ export const posts = pgTable("posts", {
 	body: text("body").notNull(),
 	imageSrc: text("image_src"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
-	tags: text('tags').array().notNull().default(sql`'{}'::text[]`),
+	tags: text("tags").array().notNull().default(sql`'{}'::text[]`),
 	autoApproveComments: boolean("auto_approve_comments").notNull().default(true),
 });
 
@@ -50,3 +57,12 @@ export const commentsRelations = relations(comments, ({ one }) => ({
 export const stickersRelations = relations(stickers, ({ one }) => ({
 	post: one(posts, { fields: [stickers.postId], references: [posts.id] }),
 }));
+
+export type Post = typeof posts.$inferSelect;
+export type NewPost = typeof posts.$inferInsert;
+
+export type Comment = typeof comments.$inferSelect;
+export type NewComment = typeof comments.$inferInsert;
+
+export type Sticker = typeof stickers.$inferSelect;
+export type NewSticker = typeof stickers.$inferInsert;

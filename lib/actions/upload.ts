@@ -38,7 +38,11 @@ export async function uploadImageAction(
 			uploadStream.end(buffer);
 		});
 
-		return { url: result.secure_url, width: result.width, height: result.height };
+		return {
+			url: result.secure_url,
+			width: result.width,
+			height: result.height,
+		};
 	} catch {
 		return { error: "Upload failed. Please try again." };
 	}

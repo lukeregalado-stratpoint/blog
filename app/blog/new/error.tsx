@@ -20,8 +20,8 @@ export default function NewPostError({
 				Couldn't publish this post
 			</h1>
 			<p className="text-sm text-[#f1faee]/70 max-w-md">
-				Something went wrong while saving your post. Your title, body, and
-				tags haven't been lost — try again, or head back and start fresh.
+				Something went wrong while saving your post. Your title, body, and tags
+				haven't been lost — try again, or head back and start fresh.
 			</p>
 			<div className="flex items-center gap-3 mt-2">
 				<button

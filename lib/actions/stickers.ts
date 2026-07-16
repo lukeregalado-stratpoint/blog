@@ -30,7 +30,13 @@ export async function addStickerAction(input: {
 }): Promise<{
 	success: boolean;
 	error?: string;
-	sticker?: { id: string; emoji: string; x: number; y: number; rotation: number | null };
+	sticker?: {
+		id: string;
+		emoji: string;
+		x: number;
+		y: number;
+		rotation: number | null;
+	};
 }> {
 	const result = placeSchema.safeParse(input);
 	if (!result.success) {

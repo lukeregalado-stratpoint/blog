@@ -2,8 +2,8 @@
 import Image from "next/image";
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { createPostAction, type PostFormState } from "@/lib/actions/posts";
 import BodyEditor from "@/components/BodyEditor";
+import { createPostAction, type PostFormState } from "@/lib/actions/posts";
 
 const initialState: PostFormState = { errors: {} };
 

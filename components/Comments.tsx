@@ -30,7 +30,6 @@ const PRESET_COLORS = [
 const NAME_MAX = 80;
 const BODY_MAX = 2000;
 const COMMENTS_PER_PAGE = 5;
-const COMMENT_TRUNCATE_LENGTH = 100;
 
 function SubmitButton() {
 	const { pending } = useFormStatus();
