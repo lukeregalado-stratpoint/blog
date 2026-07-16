@@ -48,7 +48,7 @@ export default function PostCard({ post }: { post: Post }) {
 					</Suspense>
 				</div>
 
-				<h3 className="mt-1 text-lg font-semibold font-serif text-[#283618] group-hover:underline whitespace-nowrap">
+				<h3 className="mt-1 text-lg font-semibold font-serif text-[#283618] group-hover:underline wrap-break-word md:whitespace-nowrap">
 					{post.title}
 				</h3>
 
