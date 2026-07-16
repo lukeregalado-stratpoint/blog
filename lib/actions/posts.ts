@@ -90,8 +90,8 @@ export async function createPostAction(
 
 	const slug = slugify(title);
 	await createPost({ title, slug, body, imageSrc, tags, autoApproveComments });
-	// revalidateTag("posts", "hours");
-	updateTag("posts");
+	revalidateTag("posts", "seconds");
+	// updateTag("posts");
 	redirect(`/blog/${slug}`);
 }
 

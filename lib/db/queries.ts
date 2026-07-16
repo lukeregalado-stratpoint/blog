@@ -14,7 +14,7 @@ export async function getAllPosts() {
 export async function getPostThumbnails(limit = 24) {
 	"use cache";
 	cacheTag("posts");
-	cacheLife("hours");
+	cacheLife("seconds");
 
 	return db
 		.select({
@@ -31,7 +31,7 @@ export async function getPostThumbnails(limit = 24) {
 export async function getLatestPosts(limit = 6) {
 	"use cache";
 	cacheTag("posts");
-	cacheLife("hours");
+	cacheLife("seconds");
 
 	return db
 		.select({
@@ -50,7 +50,7 @@ export async function getLatestPosts(limit = 6) {
 export async function getFeaturedPost() {
 	"use cache";
 	cacheTag("posts");
-	cacheLife("hours");
+	cacheLife("seconds");
 
 	const [latest] = await db
 		.select({
