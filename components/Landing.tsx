@@ -121,9 +121,9 @@ function Tile({
 		>
 			{/* cancels the outer rotation so tiles stay upright */}
 			<div className="w-full h-full animate-[spin_90s_linear_infinite] [animation-direction:reverse]">
-				<motion.div style={{ x: springX, y: springY }}>
+				<motion.div className="w-full h-full" style={{ x: springX, y: springY }}>
 					<motion.div
-						className="w-full h-full overflow-hidden
+						className="relative w-full h-full overflow-hidden
 							mask-[radial-gradient(ellipse_70%_70%_at_50%_50%,black_55%,transparent_100%)]
 							[-webkit-mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,black_55%,transparent_100%)]"
 						initial={{ rotate: slot.rotate, y: 0, opacity: 0 }}
