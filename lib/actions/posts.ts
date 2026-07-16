@@ -96,7 +96,7 @@ export async function createPostAction(
 
 	const slug = slugify(title);
 	await createPost({ title, slug, body, imageSrc, tags, autoApproveComments });
-	revalidateTag("posts", "hours");
+	revalidateTag("posts", "minutes");
 	redirect(`/blog/${slug}`);
 }
 
@@ -152,7 +152,7 @@ export async function updatePostAction(
 		tags,
 		autoApproveComments,
 	});
-	revalidateTag("posts", "hours");
+	revalidateTag("posts", "minutes");
 	redirect(`/blog/${slug}`);
 }
 

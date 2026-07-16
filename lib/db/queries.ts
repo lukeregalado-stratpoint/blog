@@ -6,7 +6,7 @@ import { comments, posts, stickers } from "@/lib/db/schema";
 export async function getAllPosts() {
 	"use cache";
 	cacheTag("posts");
-	cacheLife("hours");
+	cacheLife("minutes");
 
 	return db.select().from(posts).orderBy(desc(posts.createdAt));
 }
@@ -14,7 +14,7 @@ export async function getAllPosts() {
 export async function getPostThumbnails(limit = 24) {
 	"use cache";
 	cacheTag("posts");
-	cacheLife("hours");
+	cacheLife("minutes");
 
 	return db
 		.select({
@@ -31,7 +31,7 @@ export async function getPostThumbnails(limit = 24) {
 export async function getLatestPosts(limit = 6) {
 	"use cache";
 	cacheTag("posts");
-	cacheLife("hours");
+	cacheLife("minutes");
 
 	return db
 		.select({
@@ -50,7 +50,7 @@ export async function getLatestPosts(limit = 6) {
 export async function getFeaturedPost() {
 	"use cache";
 	cacheTag("posts");
-	cacheLife("hours");
+	cacheLife("minutes");
 
 	const [latest] = await db
 		.select({
@@ -71,7 +71,7 @@ export async function getFeaturedPost() {
 export async function getPostBySlug(slug: string) {
 	"use cache";
 	cacheTag("posts");
-	cacheLife("seconds");
+	cacheLife("minutes");
 
 	const [post] = await db.select().from(posts).where(eq(posts.slug, slug));
 	return post ?? null;
