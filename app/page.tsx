@@ -1,3 +1,4 @@
+import DuckWander from "@/components/DuckWander";
 import FeaturedArticle from "@/components/FeaturedArticle";
 import Landing from "@/components/Landing";
 import Latest from "@/components/Latest";
@@ -46,8 +47,9 @@ export default async function Page() {
 				</section>
 			</div>
 
-
+			
 			<section className="relative z-10 min-h-screen bg-[#f1faee]/95 bg-grain shadow-2xl px-8 pt-25 pb-8">
+				<DuckWander count={3} />
 				<h2 className="text-3xl font-bold font-serif text-black">
 					Latest posts
 				</h2>
