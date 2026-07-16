@@ -111,8 +111,8 @@ function parseBody(body: string): React.ReactNode[] {
 						width={width}
 						height={height}
 						sizes="(max-width: 640px) 100vw, 66vw"
-						className="w-auto h-auto max-w-full rounded-2xl mb-4"
-						style={{ maxWidth: `min(100%, ${width}px)` }}
+						className="w-auto h-auto max-h-125 rounded-2xl mb-4"
+						// style={{ maxWidth: `min(100%, ${width}px)` }}
 					/>,
 				);
 				break;

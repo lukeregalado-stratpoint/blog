@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import BodyRenderer from "@/components/BodyRenderer";
 import Comments from "@/components/Comments";
+import DeletePostButton from "@/components/DeletePostButton";
 import StickerLayer from "@/components/StickerLayer";
 import { isAuthenticated } from "@/lib/auth";
 import {
@@ -63,7 +64,7 @@ export default async function PostPage({
 							{post.title}
 						</h1>
 						<Suspense fallback={null}>
-							<EditLink slug={post.slug} />
+							<AdminActions slug={post.slug} postId={post.id} />
 						</Suspense>
 					</div>
 					<div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
@@ -115,17 +116,20 @@ export default async function PostPage({
 	);
 }
 
-async function EditLink({ slug }: { slug: string }) {
-	const admin = await isAuthenticated();
-	if (!admin) return null;
-	return (
-		<Link
-			href={`/blog/${slug}/edit`}
-			className="text-sm underline text-blue-400 hover:text-blue-300"
-		>
-			Edit
-		</Link>
-	);
+async function AdminActions({ slug, postId }: { slug: string; postId: string }) {
+    const admin = await isAuthenticated();
+    if (!admin) return null;
+    return (
+        <div className="flex items-center gap-3">
+            <Link
+                href={`/blog/${slug}/edit`}
+                className="text-sm underline text-blue-400 hover:text-blue-300"
+            >
+                Edit
+            </Link>
+            <DeletePostButton postId={postId} />
+        </div>
+    );
 }
 
 async function CommentsSection({ postId }: { postId: string }) {

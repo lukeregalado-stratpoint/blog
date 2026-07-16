@@ -71,7 +71,7 @@ export async function getFeaturedPost() {
 export async function getPostBySlug(slug: string) {
 	"use cache";
 	cacheTag("posts");
-	cacheLife("hours");
+	cacheLife("seconds");
 
 	const [post] = await db.select().from(posts).where(eq(posts.slug, slug));
 	return post ?? null;
@@ -134,6 +134,10 @@ export async function updatePost({
 		})
 		.where(eq(posts.id, id))
 		.returning();
+}
+
+export async function deletePost(id: string) {
+	return db.delete(posts).where(eq(posts.id, id));
 }
 
 // STICKERS

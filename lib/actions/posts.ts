@@ -6,6 +6,7 @@ import { isAuthenticated } from "@/lib/auth";
 import { cloudinary } from "@/lib/cloudinary";
 import { createPost, updatePost } from "@/lib/db/queries";
 import type { UploadApiResponse } from "cloudinary";
+import { deletePost } from "@/lib/db/queries";
 
 function slugify(title: string) {
 	return title
@@ -91,7 +92,6 @@ export async function createPostAction(
 	const slug = slugify(title);
 	await createPost({ title, slug, body, imageSrc, tags, autoApproveComments });
 	revalidateTag("posts", "seconds");
-	// updateTag("posts");
 	redirect(`/blog/${slug}`);
 }
 
@@ -138,4 +138,14 @@ export async function updatePostAction(
 	await updatePost({ id, title, slug, body, imageSrc, tags, autoApproveComments });
 	revalidateTag("posts", "seconds");
 	redirect(`/blog/${slug}`);
+}
+
+export async function deletePostAction(id: string) {
+	if (!(await isAuthenticated())) {
+		redirect("/");
+	}
+
+	await deletePost(id);
+	updateTag("posts");
+	redirect("/blog");
 }
