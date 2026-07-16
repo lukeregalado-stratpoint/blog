@@ -1,5 +1,5 @@
 "use server";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { isAuthenticated } from "@/lib/auth";
@@ -90,7 +90,8 @@ export async function createPostAction(
 
 	const slug = slugify(title);
 	await createPost({ title, slug, body, imageSrc, tags, autoApproveComments });
-	revalidateTag("posts", "hours");
+	// revalidateTag("posts", "hours");
+	updateTag("posts");
 	redirect(`/blog/${slug}`);
 }
 
